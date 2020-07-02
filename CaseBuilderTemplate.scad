@@ -82,11 +82,11 @@ LabT="";
 //Label size
 LabS=-100; // [0:64]
 
-CaseBuilder(stage=Stage,               //Design stage  
-            idimX=IdimX,               //Inner X dimension
-            idimY=IdimY,               //Inner X dimension
-            idimZ=IdimZ,               //Inner X dimension
-            ghX  = [Gh1X,Gh2X,Gh3X]) { //Grip hole offsets
+CaseBuilder(pSet(stage=Stage,                //Design stage  
+                 idimX=IdimX,                //Inner X dimension
+                 idimY=IdimY,                //Inner X dimension
+                 idimZ=IdimZ,                //Inner X dimension
+                 ghX  = [Gh1X,Gh2X,Gh3X])) { //Grip hole offsets
 
         //!!! Model the content of the case here !!!
 //        union() {

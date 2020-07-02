@@ -1,5 +1,5 @@
 //###############################################################################
-//# CaseBuilderLib - Grip Holes                                                 #
+//# CaseBuilderLib - Boundary Boxes and Checks                                  #
 //###############################################################################
 //#    Copyright 2020 Dirk Heisswolf                                            #
 //#    This file is part of the CaseBuilderLib project.                         #
@@ -19,7 +19,7 @@
 //#                                                                             #
 //###############################################################################
 //# Description:                                                                #
-//#   A cavities for user defined objects.                                      #
+//#   Boudary boxes and checks for multiple purposes.                           #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
@@ -30,20 +30,81 @@
 
 include <CaseBuilderLib_Common.scad>
 
-//Grip hole positions
-module ghPos(pSet) {
+//Boundary box around the inner dimensions 
+module idimBb(pSet) {
     //Short cuts
     idimX  = pSet[idxIdimX];  //Inner X dimension
     idimY  = pSet[idxIdimY];  //Inner Y dimension
     idimZ  = pSet[idxIdimZ];  //Inner Z dimension
-    ghX    = pSet[idxGhX];    //Grip hole positions
-    ghW    = pSet[idxGhW];    //Grip hole width
 
-    //Iterate over grip hole array
-    for (x=ghX) {
-        //Only draw grip holes that are within the boundary
-        if (((x+ghW/2)<=(idimX/2)) && ((x-ghW/2)>=(-idimX/2))) {
-           translate([x,0,-idimZ/4]) cube([ghW,idimY,idimZ/2],center=true); 
-        }
+    cube([idimX,idimY,idimZ],center=true);
+}
+
+//Boundary box around the inner dimensions if the lower shell
+module lowerIdimBb(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    translate([0,0,-idimZ/4]) cube([idimX,idimY,idimZ/2],center=true);
+}
+
+//Boundary box around the inner dimensions of the upper shell
+module upperIdimBb(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    translate([0,0,idimZ/4]) cube([idimX,idimY,idimZ/2],center=true);
+}
+
+//Boundary check against the inner dimensions of the lower shell (one child only)
+module lowerIdimBCheck(pSet) {
+    //Draw parts out of range range red
+    color("red")
+    difference() {
+        children(0);
+        lowerIdimBb(pSet);
+    }
+
+    //Draw parts within range green
+    color("green")
+    hull() {
+        intersection() {
+            children(0);
+            lowerIdimBb(pSet);
+        }        
     }
 }
+
+//Boundary check against the inner dimensions of the upper shell (one child only)
+module upperIdimBCheck(pSet) {
+    //Draw parts out of range range red
+    color("red")
+    difference() {
+        children(0);
+        upperIdimBb(pSet);
+    }
+
+    //Draw parts within range green
+    color("green")
+    hull() {
+        intersection() {
+            children(0);
+            upperIdimBb(pSet);
+        }        
+    }
+}
+
+//Lower infinite boundary
+module lowerInfBb() {
+    translate([0,0,-inf/2]) cube([2*inf,2*inf,inf],center=true);
+}
+
+//Upper infinite boundary
+module upperInfBb() {
+    translate([0,0,inf/2]) cube([2*inf,2*inf,inf],center=true);
+}
+    

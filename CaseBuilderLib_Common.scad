@@ -30,6 +30,7 @@
 
 //Default values
 //==============
+defStage  =   1;   //Design stage
 defIdimX  = 100;   //Inner X dimension
 defIdimY  =  50;   //Inner Y dimension
 defIdimZ  =  30;   //Inner Z dimension
@@ -41,16 +42,91 @@ defSlackX =   2;   //Object's slack in X direction
 defSlackY =   2;   //Object's slack in Y direction
 defSlackZ =   1;   //Object's slack in Z direction
 defCoffZ  =   5;   //Cavity offset in Z direction
-defGhX    =  [];   //Grip hole positions
+defGhX    = [0];   //Grip hole positions
 defGhW    =  15;   //Grip hole width
 defLabT   =  "";   //Label text
 defLabS   =   0;   //Label size
+
+//Parameter set
+//=============
+idxStage  =   0;   //Design stage
+idxIdimX  =   1;   //Inner X dimension
+idxIdimY  =   2;   //Inner Y dimension
+idxIdimZ  =   3;   //Inner Z dimension
+idxWallW  =   4;   //Wall thickness
+idxGapW   =   5;   //Gap between moving parts
+idxHSegW  =   6;   //Length of a hinge segment
+idxHSegD  =   7;   //Diameter of a hinge segment
+idxSlackX =   8;   //Object's slack in X direction
+idxSlackY =   9;   //Object's slack in Y direction
+idxSlackZ =  10;   //Object's slack in Z direction
+idxCoffZ  =  11;   //Cavity offset in Z direction
+idxGhX    =  12;   //Grip hole positions
+idxGhW    =  13;   //Grip hole width
+idxLabT   =  14;   //Label text
+idxLabS   =  15;   //Label size
+
+function pSet(stage  = defStage,  //Design stage
+              idimX  = defIdimX,  //Inner X dimension
+              idimY  = defIdimY,  //Inner Y dimension
+              idimZ  = defIdimZ,  //Inner Z dimension
+              wallW  = defWallW,  //Wall thickness
+              gapW   = defGapW,   //Gap between moving parts
+              hSegW  = defHSegW,  //Length of a hinge segment
+              hSegD  = defHSegD,  //Diameter of a hinge segment
+              slackX = defSlackX, //Object's slack in X direction
+              slackY = defSlackY, //Object's slack in Y direction
+              slackZ = defSlackZ, //Object's slack in Z direction
+              coffZ  = defCoffZ,  //Cavity offset in Z direction
+              ghX    = defGhX,    //Grip hole positions
+              ghW    = defGhW,    //Grip hole width
+              labT   = defLabT,   //Label text
+              labS   = defLabS) = //Label size
+             [stage,              //Design stage
+              idimX,              //Inner X dimension
+              idimY,              //Inner Y dimension
+              idimZ,              //Inner Z dimension
+              wallW,              //Wall thickness
+              gapW,               //Gap between moving parts
+              hSegW,              //Length of a hinge segment
+              hSegD,              //Diameter of a hinge segment
+              slackX,             //Object's slack in X direction
+              slackY,             //Object's slack in Y direction
+              slackZ,             //Object's slack in Z direction
+              coffZ,              //Cavity offset in Z direction
+              ghX,                //Grip hole positions
+              ghW,                //Grip hole width
+              labT,               //Label text
+              labS];              //Label size
+                          
+ //Common variables             
+inf = 10000;                      //Huge number
 
 //Common functions
 //================
 //Reuse from NopSCADlib:
 function r2sides(r)   = $fn ? $fn : ceil(max(min(360/ $fa, r * 2 * PI / $fs), 5)); //Replicates the OpenSCAD logic to calculate the number of sides from the radius
 function r2sides4n(r) = floor((r2sides(r) + 3) / 4) * 4;                           //Round up the number of sides to a multiple of 4 to ensure points land on all axes
+
+//Common operations
+//=================
+//Shift first child from the center to the lower shell position
+module shift(pSet) {
+    //Short cuts
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    gapW   = pSet[idxGapW];   //Gap between moving parts    
+    translate([0,gapW+wallW+idimY/2,0]) children(0); 
+}
+
+//Shift first child from the center to the opened upper shell positon
+module open(pSet) {
+    //Short cuts
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    gapW   = pSet[idxGapW];   //Gap between moving parts    
+    rotate([180,0,0]) translate([0,gapW+wallW+idimY/2,0]) children(0); 
+}
 
 //Common shapes
 //=============

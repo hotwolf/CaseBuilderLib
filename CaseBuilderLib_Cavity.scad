@@ -29,134 +29,110 @@
 //###############################################################################
 
 include <CaseBuilderLib_Common.scad>
+use     <CaseBuilderLib_Boundary.scad>
 
-//Shift an object away from the hinge
-module shift(wallW = defWallW,    //Wall thickness
-             gapW  = defGapW) {   //Gap between moving parts
-    translate([0,gapW+wallW,0]) children();
-}
+//Add slack to the first child
+module slack(pSet) {
+    //Short cuts
+    slackX = pSet[idxSlackX]; //Object's slack in X direction
+    slackY = pSet[idxSlackY]; //Object's slack in Y direction
+    slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
 
-//Add slack to an object
-module slack(slackX = defSlackX,   //Object's slack in X direction
-             slackY = defSlackY,   //Object's slack in Y direction
-             slackZ = defSlackZ) { //Object's slack in Z direction
-    for (idx=[0:1:$children-1])  {
-        hull() {
-            translate([slackX/2,slackX/2,slackZ/2])    children(idx); 
-            translate([slackX/2,-slackX/2,slackZ/2])   children(idx); 
-            translate([-slackX/2,slackX/2,slackZ/2])   children(idx); 
-            translate([-slackX/2,-slackX/2,slackZ/2])  children(idx); 
+    //Determine the number of steps
+    steps = r2sides4n(max(slackX, slackY));
     
-            translate([slackX/2,slackX/2,-slackZ/2])   children(idx); 
-            translate([slackX/2,-slackX/2,-slackZ/2])  children(idx); 
-            translate([-slackX/2,slackX/2,-slackZ/2])  children(idx); 
-            translate([-slackX/2,-slackX/2,-slackZ/2]) children(idx); 
-        }        
-    }
-}
-
-//Cut off the upper section of an object
-module upperSection(idimX = defIdimX,   //Inner X dimension
-                    idimY = defIdimY,   //Inner Y dimension
-                    idimZ = defIdimZ,   //Inner Z dimension
-                    wallW = defWallW,   //Wall thickness
-                    gapW  = defGapW,    //Gap between moving parts
-                    coffZ = defCoffZ) { //Cavity offset in Z direction
-    intersection() {     
-        translate([gapW+wallW,0,coffZ]) cube([idimX,idimY,(idimZ/2)-coffZ]);
-        union() { children(); }
-    }
-}
-
-//Cut off the lower section of an object
-module lowerSection(idimX = defIdimX,   //Inner X dimension
-                    idimY = defIdimY,   //Inner Y dimension
-                    idimZ = defIdimZ,   //Inner Z dimension
-                    wallW = defWallW,   //Wall thickness
-                    gapW  = defGapW,    //Gap between moving parts
-                    coffZ = defCoffZ) { //Cavity offset in Z direction
-    intersection() {     
-        translate([gapW+wallW,0,-(idimZ/2)]) cube([idimX,idimY,(idimZ/2)-coffZ]);
-        union() { children(); }
-    }
-}
-
-module cavityShape(upper=false) {
-   for (idx=[0:1:$children-1])  {
-         hull() {
-            translate([0,0,upper ? -1 : 0])
-            linear_extrude(1) {
-                projection(cut=false) children(idx);
-            }
-            children(idx);
+    //Build slack shape
+    hull() {
+        for (angle=[0:360/steps:359]) {
+//            echo("angle: ", angle);
+            
+            translate([slackX*sin(angle),slackY*cos(angle),slackZ])  children(0);
+            translate([slackX*sin(angle),slackY*cos(angle),-slackZ]) children(0);
         }
     }
-}
+}        
+ 
+//Add rotary clearance to the first child
+module clearance(pSet) {
+    //Short cuts
+    idimY  = pSet[idxIdimY];                //Inner Y dimension
+    wallW  = pSet[idxWallW];                //Wall thickness
+    gapW   = pSet[idxGapW];                 //Gap between moving parts
 
-//Space for opening the upper shell
-module rotarySpace(rmax=(defGapW+defWallW+defIdimY)) {
-    steps = r2sides4n(rmax)/4;   //Determine rotary steps
+    offset = gapW+wallW+idimY/2;            //Offset from pivot point
+    steps  = r2sides4n(gapW+wallW+idimY)/4; //Determine rotary steps
+  
     for (idx=[0:1:$children-1])  {
         hull() {
             for (rotX=[0:90/steps:90]) {
-                rotate([-rotX,0,0]) children(idx);
+                difference() {             
+                    translate([0,-offset,0])
+                    rotate([-rotX,0,0]) 
+                    translate([0,offset,0])
+                    children(0);
+                    
+                    lowerInfBb();
+                }
             }
         }
     }
 }
 
-//Test objects
-module obj1() {
-   translate([defIdimX/2,(defIdimY/2)+10,-(defIdimZ-10)/2]) cylinder(h=defIdimZ-10,r1=10,r2=0);
+//Add lower opening for the first child
+module lowerOpening(pSet) {
+    hull() {
+        difference() {
+            children(0);
+            upperInfBb();
+        }
+        linear_extrude(1)
+        projection(cut=false) 
+        difference() {
+            children(0);
+            upperInfBb();
+        }
+    }
+}    
+
+//Add upper opening for the first child
+module upperOpening(pSet) {
+    hull() {
+        difference() {
+            children(0);
+            lowerInfBb();
+        }
+        translate([0,0,-1])
+        linear_extrude(1)
+        projection(cut=false) 
+        difference() {
+            children(0);
+            lowerInfBb();
+        }
+    }
+}    
+
+//Lower cavity shape of the first child
+module lowerCavShape(pSet) {
+    //Cascade operations
+    lowerOpening(pSet) {
+        slack(pSet) {
+            children(0);
+        }
+    }
 }
-module obj2() {
-   translate([defIdimX/2,(defIdimY/2)-10,-(defIdimZ-10)/2]) cylinder(h=defIdimZ-10,r1=0,r2=10);
+
+//Upper cavity shape of the first child
+module upperCavShape(pSet) {
+    //Cascade operations
+    upperOpening(pSet) {
+        clearance(pSet) {
+            slack(pSet) {
+                children(0);
+            }
+        }
+    }
 }
 
-
-if ($preview) {
-
-    //Plain object
-//    obj1();
-//    obj2();
-  
-    //Shifted object
-//    shift() { 
-//        obj1();
-//        obj2();
-//    }
- 
-     //Object with slack
-//     slack() { 
-//         obj1();
-//         obj2();
-//     }
-  
-     //Upper section
-//     upperSection() {
-//         obj1();
-//         obj2();
-//     } 
-    
-     //Lower section
-     lowerSection() {
-         obj1();
-         obj2();
-     } 
-    
-    //Cavity shape
-//    cavityShape(upper=true) { 
-//        upperSection() { obj1(); }
-//        upperSection() { obj2(); }
-//    }
-
-    //Cavity shape
-//    rotarySpace() { 
-//        upperSection() { obj1(); }
-//        upperSection() { obj2(); }
-//    }
-
-}
 
 
 

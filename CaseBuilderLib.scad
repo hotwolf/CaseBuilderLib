@@ -29,47 +29,107 @@
 //###############################################################################
 
 include <CaseBuilderLib_Common.scad>
+use     <CaseBuilderLib_Boundary.scad>
+use     <CaseBuilderLib_Cavity.scad>
+use     <CaseBuilderLib_GripHole.scad>
 
 //Main builder module
-module CaseBuilder(stage=3,          //Design stage  
-                   idimX=defIdimX,   //Inner X dimension
-                   idimY=defIdimY,   //Inner X dimension
-                   idimZ=defIdimZ,   //Inner X dimension
-                     ghX=defGhX,     //Grip hole positions
-                     ghW=defGhW,     //Grip hole width
-                    labT=defLabT,    //Label text
-                    labS=defLabS) {  //Label size
+module CaseBuilder(pSet) {
+    //Short cuts
+    stage  = pSet[idxStage];  //Design stage  
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    gapW   = pSet[idxGapW];   //Gap between moving parts
+    hsegW  = pSet[idxHSegW];  //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
+    slackX = pSet[idxSlackX]; //Object's slack in X direction
+    slackY = pSet[idxSlackY]; //Object's slack in Y direction
+    slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
+    coofZ  = pSet[idxCoffZ];  //Cavity offset in Z direction
+    ghX    = pSet[idxGhX];    //Grip hole positions
+    ghW    = pSet[idxGhW];    //Grip hole width
+    labT   = pSet[idxLabT];   //Label text
+    labS   = pSet[idxLabS];   //Label size
 
     //Model stage
+    //===========
     if ((stage==1)&&($preview)) {
 
         //Draw children and color code boundary violations
         for (idx=[0:1:$children-1])  {
-
-            //Draw parts out of range range red
-            color("red")
-//            hull() {
-                difference() {
-                    children(idx);
-                    cube([idimX,idimY,idimZ],center=true);
-                }
-//            }
-
-            //Draw parts within range green
-            color("green")
-            hull() {
-                intersection() {
-                    children(idx);
-                    cube([idimX,idimY,idimZ],center=true);
-                }
-            }        
+            idimBCheck(pSet) {
+                children(idx);
+            }
         }
-    
+                
+        //Draw grip hole positions
+        color("yellow",0.55)
+        ghPos(pSet);
+      
         //Visualize inner dimensions
-        color("gray",0.25) translate([0,0,idimZ/4])  cube([idimX,idimY,idimZ/2],center=true);
-        color("gray",0.45) translate([0,0,-idimZ/4]) cube([idimX,idimY,idimZ/2],center=true);
+        color("gray",0.25) upperIdimBb(pSet);
+        color("gray",0.45) lowerIdimBb(pSet);
+        
+        //Preview label
         
     }       
+
+    //Check stage
+    //===========
+    if ((stage==2)&&($preview)) {
+    
+        //Show lower cavity
+        for (idx=[0:1:$children-1])  {
+            shift(pSet) {
+                lowerIdimBCheck(pSet) {
+                    difference() {
+                        lowerCavShape(pSet) {
+                            children(idx);
+                        }
+                        upperInfBb();
+                    }
+                }
+            }
+        }
+
+        //Show upper cavity
+        for (idx=[0:1:$children-1])  {
+            open(pSet) {
+                upperIdimBCheck(pSet) {
+                    difference() {
+                        upperCavShape(pSet) {
+                            children(idx);
+                        }
+                        lowerInfBb();
+                    }
+                }
+            }
+        }
+        
+        //Visualize inner dimensions
+        color("gray",0.45) shift(pSet) lowerIdimBb(pSet);
+        color("gray",0.25) open(pSet)  upperIdimBb(pSet);
+
+
+    }
+
+    //Generate stage
+    //==============
+   if ((stage==3)||(!$preview)) {
+
+
+        //Draw shell
+
+
+
+        //Hover object uver open case
+        if ($preview) {
+            color("yellow")
+            translate([gapW+wallW+idimX/2,0,40+idimZ/2]) children();
+        }
+    }
 }
 
 
