@@ -117,10 +117,10 @@ if ($preview) {
 
 
     //Lower shell
-    translate([-defIdimX/2,defGapW,-defIdimZ]) cube([defIdimX,defIdimZ,defIdimZ]);
+//    translate([-defIdimX/2,defGapW,-defIdimZ]) cube([defIdimX,defIdimZ,defIdimZ]);
     
     //Upper shell
-    translate([-defIdimX/2,-defGapW-defIdimZ,-defIdimZ]) cube([defIdimX,defIdimZ,defIdimZ]);
+//    translate([-defIdimX/2,-defGapW-defIdimZ,-defIdimZ]) cube([defIdimX,defIdimZ,defIdimZ]);
     
     
   

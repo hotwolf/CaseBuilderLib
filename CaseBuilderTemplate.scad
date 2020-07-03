@@ -78,20 +78,19 @@ Gh3X=-100; // [-100:100]
 
 /* [Label] */
 //Label text
-LabT="";
+LabT="Optional label!";
 //Label size
-LabS=-100; // [0:64]
+LabS=-10; // [0:40]
 
-CaseBuilder(pSet(stage=Stage,                //Design stage  
-                 idimX=IdimX,                //Inner X dimension
-                 idimY=IdimY,                //Inner X dimension
-                 idimZ=IdimZ,                //Inner X dimension
-                 ghX  = [Gh1X,Gh2X,Gh3X])) { //Grip hole offsets
+CaseBuilder(pSet(stage=Stage,             //Design stage  
+                 idimX=IdimX,             //Inner X dimension
+                 idimY=IdimY,             //Inner X dimension
+                 idimZ=IdimZ,             //Inner X dimension
+                 ghX  = [Gh1X,Gh2X,Gh3X], //Grip hole offsets
+                 labT = LabT,             //Label text
+                 labS = LabS)) {          //Label size
 
-        //!!! Model the content of the case here !!!
-//        union() {
-        translate([0,10,-12.5]) cylinder(25,d1=30,d2=0);     
-        translate([0,-10,-12.5]) cylinder(25,d1=0,d2=30);     
-//        }
+        //!!! Your model goes here !!!
+        translate([0,0,-12.5]) cylinder(25,d1=30,d2=0);     
 
 }

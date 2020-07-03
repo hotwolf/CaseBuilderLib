@@ -60,6 +60,46 @@ module upperIdimBb(pSet) {
     translate([0,0,idimZ/4]) cube([idimX,idimY,idimZ/2],center=true);
 }
 
+//Boundary box around the inner dimensions if the lower inlay
+module lowerInlBb(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
+
+    translate([0,0,(-idimZ/4)-(inlZ/2)]) cube([idimX,idimY,(idimZ/2)-inlZ],center=true);
+}
+
+//Boundary box around the inner dimensions of the upper inlay
+module upperInlBb(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
+
+    translate([0,0,(idimZ/4)+(inlZ/2)]) cube([idimX,idimY,(idimZ/2)-inlZ],center=true);
+}
+
+//Boundary check against the inner dimensions (one child only)
+module idimBCheck(pSet) {
+    //Draw parts out of range range red
+    color("red")
+    difference() {
+        children(0);
+        idimBb(pSet);
+    }
+
+    //Draw parts within range green
+    color("green")
+    hull() 
+    intersection() {
+        children(0);
+        idimBb(pSet);
+    }           
+}
+
 //Boundary check against the inner dimensions of the lower shell (one child only)
 module lowerIdimBCheck(pSet) {
     //Draw parts out of range range red
@@ -71,12 +111,11 @@ module lowerIdimBCheck(pSet) {
 
     //Draw parts within range green
     color("green")
-    hull() {
-        intersection() {
-            children(0);
-            lowerIdimBb(pSet);
-        }        
-    }
+    hull()
+    intersection() {
+        children(0);
+        lowerIdimBb(pSet);
+    }        
 }
 
 //Boundary check against the inner dimensions of the upper shell (one child only)
@@ -90,12 +129,11 @@ module upperIdimBCheck(pSet) {
 
     //Draw parts within range green
     color("green")
-    hull() {
-        intersection() {
-            children(0);
-            upperIdimBb(pSet);
-        }        
-    }
+    hull()
+    intersection() {
+        children(0);
+        upperIdimBb(pSet);
+    }        
 }
 
 //Lower infinite boundary

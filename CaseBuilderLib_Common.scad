@@ -41,7 +41,7 @@ defHSegD  =   5;   //Diameter of a hinge segment
 defSlackX =   2;   //Object's slack in X direction
 defSlackY =   2;   //Object's slack in Y direction
 defSlackZ =   1;   //Object's slack in Z direction
-defCoffZ  =   5;   //Cavity offset in Z direction
+defInlZ   =   3;   //Inlay offset in Z direction
 defGhX    = [0];   //Grip hole positions
 defGhW    =  15;   //Grip hole width
 defLabT   =  "";   //Label text
@@ -60,7 +60,7 @@ idxHSegD  =   7;   //Diameter of a hinge segment
 idxSlackX =   8;   //Object's slack in X direction
 idxSlackY =   9;   //Object's slack in Y direction
 idxSlackZ =  10;   //Object's slack in Z direction
-idxCoffZ  =  11;   //Cavity offset in Z direction
+idxInlZ   =  11;   //Inlay offset in Z direction
 idxGhX    =  12;   //Grip hole positions
 idxGhW    =  13;   //Grip hole width
 idxLabT   =  14;   //Label text
@@ -77,7 +77,7 @@ function pSet(stage  = defStage,  //Design stage
               slackX = defSlackX, //Object's slack in X direction
               slackY = defSlackY, //Object's slack in Y direction
               slackZ = defSlackZ, //Object's slack in Z direction
-              coffZ  = defCoffZ,  //Cavity offset in Z direction
+              inlZ   = defInlZ,   //Inlay offset in Z direction
               ghX    = defGhX,    //Grip hole positions
               ghW    = defGhW,    //Grip hole width
               labT   = defLabT,   //Label text
@@ -93,7 +93,7 @@ function pSet(stage  = defStage,  //Design stage
               slackX,             //Object's slack in X direction
               slackY,             //Object's slack in Y direction
               slackZ,             //Object's slack in Z direction
-              coffZ,              //Cavity offset in Z direction
+              inlZ,               //Inlay offset in Z direction
               ghX,                //Grip hole positions
               ghW,                //Grip hole width
               labT,               //Label text
@@ -116,7 +116,7 @@ module shift(pSet) {
     idimY  = pSet[idxIdimY];  //Inner Y dimension
     wallW  = pSet[idxWallW];  //Wall thickness
     gapW   = pSet[idxGapW];   //Gap between moving parts    
-    translate([0,gapW+wallW+idimY/2,0]) children(0); 
+    translate([0,-gapW-wallW-idimY/2,0]) children(0); 
 }
 
 //Shift first child from the center to the opened upper shell positon
@@ -125,7 +125,7 @@ module open(pSet) {
     idimY  = pSet[idxIdimY];  //Inner Y dimension
     wallW  = pSet[idxWallW];  //Wall thickness
     gapW   = pSet[idxGapW];   //Gap between moving parts    
-    rotate([180,0,0]) translate([0,gapW+wallW+idimY/2,0]) children(0); 
+    rotate([180,0,0]) translate([0,-gapW-wallW-idimY/2,0]) children(0); 
 }
 
 //Common shapes

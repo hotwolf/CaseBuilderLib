@@ -30,3 +30,33 @@
 
 include <CaseBuilderLib_Common.scad>
 
+//Flat label
+module flatLabel(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    labT   = pSet[idxLabT];   //Label text
+    labS   = pSet[idxLabS];   //Label size
+    
+    //Label
+    translate([0,0,wallW+idimZ/2]) text(text=labT,size=labS,halign="center",valign="center");
+}
+
+//Engrave label into top shell
+module engraveLabel(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    labT   = pSet[idxLabT];   //Label text
+    labS   = pSet[idxLabS];   //Label size
+    
+    //Engrave
+    difference() {
+        children();
+        translate([0,0,wallW-0.4+idimZ/2]) linear_extrude(0.8) text(text=labT,size=labS,halign="center",valign="center");
+    }
+}

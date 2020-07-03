@@ -29,76 +29,48 @@
 //###############################################################################
 
 include <CaseBuilderLib_Common.scad>
+use     <CaseBuilderLib_Label.scad>
 
-//Lower shell
+//Shell shape
 //===========
-module lowerShell(idimX = defIdimX,  //Inner X dimension
-                  idimY = defIdimY,  //Inner Y dimension
-                  idimZ = defIdimZ,  //Inner Z dimension
-                  wallW = defWallW,  //Wall thickness
-                  gapW  = defGapW) { //Gap between moving parts
-
-    //Local variables          
-    halfX = idimX/2;
-    halfZ = idimZ/2;
+module shellShape(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    gapW   = pSet[idxGapW];   //Gap between moving parts
+    
 
     difference() {
         hull() {
-            translate([halfX,wallW+gapW,-halfZ])        cylinder4n(h=halfZ,r=wallW);
-            translate([halfX,wallW+gapW,-halfZ])        hemisphere4n(r=wallW,shs=true);
-            translate([halfX,wallW+gapW+idimY,-halfZ])  cylinder4n(h=halfZ,r=wallW);
-            translate([halfX,wallW+gapW+idimY,-halfZ])  hemisphere4n(r=wallW,shs=true);
-            translate([-halfX,wallW+gapW+idimY,-halfZ]) cylinder4n(h=halfZ,r=wallW);
-            translate([-halfX,wallW+gapW+idimY,-halfZ]) hemisphere4n(r=wallW,shs=true);
-            translate([-halfX,wallW+gapW,-halfZ])       cylinder4n(h=halfZ,r=wallW);
-            translate([-halfX,wallW+gapW,-halfZ])       hemisphere4n(r=wallW,shs=true);
+            translate([idimX/2,idimY/2,-idimZ/2])   cylinder4n(h=idimZ/2,r=wallW);
+            translate([idimX/2,idimY/2,-idimZ/2])   hemisphere4n(r=wallW,shs=true);
+
+            translate([idimX/2,-idimY/2,-idimZ/2])  cylinder4n(h=idimZ/2,r=wallW);
+            translate([idimX/2,-idimY/2,-idimZ/2])  hemisphere4n(r=wallW,shs=true);
+
+            translate([-idimX/2,idimY/2,-idimZ/2])  cylinder4n(h=idimZ/2,r=wallW);
+            translate([-idimX/2,idimY/2,-idimZ/2])  hemisphere4n(r=wallW,shs=true);
+
+            translate([-idimX/2,-idimY/2,-idimZ/2]) cylinder4n(h=idimZ/2,r=wallW);
+            translate([-idimX/2,-idimY/2,-idimZ/2]) hemisphere4n(r=wallW,shs=true);
         }
-        translate([-halfX,wallW+gapW,-halfZ])           cube([idimX,idimY,halfZ+1]);
+        cube([idimX,idimY,1+idimZ],center=true);
     }
+}
+
+//Lower shell
+//===========
+module lowerShell(pSet) {
+    //Shell shape
+    shellShape(pSet);
 }
 
 //Upper shell
 //===========
-module upperShell(idimX = defIdimX,  //Inner X dimension
-                  idimY = defIdimY,  //Inner Y dimension
-                  idimZ = defIdimZ,  //Inner Z dimension
-                  wallW = defWallW,  //Wall thickness
-                  gapW  = defGapW) { //Gap between moving parts
-
-    //Upper shell
-    rotate([0,0,180])
-    lowerShell(idimX = idimX,        //Inner X dimension
-               idimY = idimY,        //Inner Y dimension
-               idimZ = idimZ,        //Inner Z dimension
-               wallW = wallW,        //Wall thickness
-               gapW  = gapW);        //Gap between moving parts
-}
-//Upper and lower shell
-//=====================
-module shell(idimX = defIdimX,       //Inner X dimension
-             idimY = defIdimY,       //Inner Y dimension
-             idimZ = defIdimZ,       //Inner Z dimension
-             wallW = defWallW,       //Wall thickness
-             gapW  = defGapW) {      //Gap between moving parts
-
-    //Lower shell
-    lowerShell(idimX = idimX,        //Inner X dimension
-               idimY = idimY,        //Inner Y dimension
-               idimZ = idimZ,        //Inner Z dimension
-               wallW = wallW,        //Wall thickness
-               gapW  = gapW);        //Gap between moving parts
-
-    //Upper shell
-    upperShell(idimX = idimX,        //Inner X dimension
-               idimY = idimY,        //Inner Y dimension
-               idimZ = idimZ,        //Inner Z dimension
-               wallW = wallW,        //Wall thickness
-               gapW  = gapW);        //Gap between moving parts
-}
-
-if ($preview) {
-
-    //Shell
-    shell();
-   
+module upperShell(pSet) {
+    //Shell shape
+    engraveLabel(pSet)
+    rotate([180,0,0]) shellShape(pSet);
 }
