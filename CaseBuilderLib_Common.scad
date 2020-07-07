@@ -108,6 +108,10 @@ inf = 10000;                      //Huge number
 function r2sides(r)   = $fn ? $fn : ceil(max(min(360/ $fa, r * 2 * PI / $fs), 5)); //Replicates the OpenSCAD logic to calculate the number of sides from the radius
 function r2sides4n(r) = floor((r2sides(r) + 3) / 4) * 4;                           //Round up the number of sides to a multiple of 4 to ensure points land on all axes
 
+//Check for even/odd numbers
+function is_even(n) = (n/2) == floor(n/2);
+function is_odd(n)  = (n/2) != floor(n/2);
+
 //Common operations
 //=================
 //Shift first child from the center to the lower shell position

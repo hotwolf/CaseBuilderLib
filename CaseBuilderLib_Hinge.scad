@@ -30,101 +30,362 @@
 
 include <CaseBuilderLib_Common.scad>
 
-//Hinge segments
-//==============
-//Male segment - positive
-module hingeMalePos(wallW = defWallW,    //Wall thickness
-                    gapW  = defGapW,     //Gap between moving parts
-                    segW  = defHSegW,    //Length of the segment
-                    segD  = defHSegD) {  //Diameter of the segment
-
-    //Local variables
-    cylH = segW-gapW*sqrt(2);            //Height of the cylinder shape
-    cylR = segD/2;                       //Diameter of the cylinder shape
-
+//Positive lower hinge start segment
+module lowerHStartPos(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = (hsegW-gapW*sq2)/2; //Height of the cylinder shape
+    cylR   = hsegD/2;            //Radius of the cylinder shape
+ 
     hull() {
-        translate([-cylH/2,0,0]) rotate([0,90,0]) cylinder4n(h=cylH,r=cylR);
-        translate([-cylH/2,gapW,-2*cylR])         cube([cylH,cylR-gapW,2*cylR]);
+        sphere4n(r=cylR);
+        rotate([0,90,0])            cylinder4n(h=cylH,r=cylR);
+        translate([0,gapW,-2*cylR]) cube([cylH,cylR-gapW,2*cylR]);
     }
-    translate([cylH/2,0,0])  rotate([0,90,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
-    translate([-cylH/2,0,0]) rotate([0,-90,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
+    translate([cylH,0,0]) rotate([0,90,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
 }
 
-//Male segment - negative
-module hingeMaleNeg(wallW = defWallW,    //Wall thickness
-                    gapW  = defGapW,     //Gap between moving parts
-                    segW  = defHSegW,    //Length of the segment
-                    segD  = defHSegD) {  //Diameter of the segment
+//Negative lower hinge start segment
+module lowerHStartNeg(pSet,$fn=24 ) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = (hsegW+gapW*sq2)/2; //Height of the cylinder shape
+    cylR   = gapW+hsegD/2;       //Radius of the cylinder shape
+    conR   = hsegD/2;            //Radius of the cone shape
 
-    //Local variables
-    cylH = segW+2*gapW*sqrt(2);;         //Height of the cylinder shape
-    cylR = gapW+segD/2;                  //Diameter of the cylinder shape
-
-    hull() {
-        translate([-cylH/2,0,0]) rotate([0,90,0]) cylinder4n(h=cylH,r=cylR);
-        translate([-cylH/2,gapW,-2*cylR])         cube([cylH,cylR-gapW,2*cylR]);
+    rotate([180,0,0]) {
+        hull() {
+            sphere4n(r=cylR);
+            rotate([0,90,0])            cylinder4n(h=cylH,r=cylR);
+            translate([0,gapW,-2*cylR]) cube([cylH,cylR-gapW,2*cylR]);
+        }
+        translate([cylH,0,0]) rotate([0,90,0]) cylinder4n(h=conR,r1=conR,r2=0);
     }
-//    translate([cylH/2,0,0])  rotate([0,90,0]) cylinder4n(h=cylR-gapW,r1=cylR-gapW,r2=0);
-//    translate([-cylH/2,0,0]) rotate([0,-90,0]) cylinder4n(h=cylR-gapW,r1=cylR-gapW,r2=0);
 }
 
-//Female segment - positive
-module hingeFemalePos(wallW = defWallW,    //Wall thickness
-                      gapW  = defGapW,     //Gap between moving parts
-                      segW  = defHSegW,    //Length of the segment
-                      segD  = defHSegD) {  //Diameter of the segment
+//Positive lower hinge end segment
+module lowerHEndPos(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = (hsegW-gapW*sq2)/2; //Height of the cylinder shape
+    cylR   = hsegD/2;            //Radius of the cylinder shape
 
-    //Local variables
-    cylH = segW-gapW*sqrt(2);              //Height of the cylinder shape
-    cylR = segD/2;                         //Diameter of the cylinder shape
+    hull() {
+        sphere4n(r=cylR);
+        rotate([0,270,0])               cylinder4n(h=cylH,r=cylR);
+        translate([-cylH,gapW,-2*cylR]) cube([cylH,cylR-gapW,2*cylR]);
+    }
+    translate([-cylH,0,0]) rotate([0,270,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
+}
+
+//Negative lower hinge end segment
+module lowerHEndNeg(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = (hsegW+gapW*sq2)/2; //Height of the cylinder shape
+    cylR   = gapW+hsegD/2;       //Radius of the cylinder shape
+    conR   = hsegD/2;            //Radius of the cone shape
+
+    rotate([180,0,0]) {
+        hull() {
+            sphere4n(r=cylR);
+            rotate([0,270,0])               cylinder4n(h=cylH,r=cylR);
+            translate([-cylH,gapW,-2*cylR]) cube([cylH,cylR-gapW,2*cylR]);
+        }
+        translate([-cylH,0,0]) rotate([0,270,0]) cylinder4n(h=conR,r1=conR,r2=0);
+    }
+}
+
+//Positive upper hinge end segment
+module upperHEndPos(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = (hsegW-gapW*sq2)/2; //Height of the cylinder shape
+    cylR   = hsegD/2;            //Radius of the cylinder shape
 
     difference() {
         hull() {
-            translate([-cylH/2,0,0]) rotate([0,90,0]) cylinder4n(h=cylH,r=cylR);
-            translate([-cylH/2,-cylR,-2*cylR])         cube([cylH,cylR-gapW,2*cylR]);
+            sphere4n(r=cylR);
+            rotate([0,270,0])         cylinder4n(h=cylH,r=cylR);
+            translate([-cylH,gapW,0]) cube([cylH,cylR-gapW,2*cylR]);
         }
-        union() {
-            translate([-cylH/2,0,0]) rotate([0,90,0])  cylinder4n(h=cylR,r1=cylR,r2=0);
-            translate([cylH/2,0,0])  rotate([0,-90,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
+        translate([-cylH,0,0]) rotate([0,90,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
+    }
+}
+
+//Negative upper hinge end segment
+module upperHEndNeg(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = (hsegW+gapW*sq2)/2; //Height of the cylinder shape
+    cylR   = gapW+hsegD/2;       //Radius of the cylinder shape
+    conR   = hsegD/2;            //Radius of the cone shape
+
+    rotate([180,0,0]) {
+        hull() {
+            sphere4n(r=cylR);
+            rotate([0,270,0])         cylinder4n(h=cylH,r=cylR);
+            translate([-cylH,gapW,0]) cube([cylH,cylR-gapW,2*cylR]);
         }
     }
 }
+
+//Positive lower hinge segment
+module lowerHSegPos(pSet,$fn=24) {
+     //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = hsegW-gapW*sq2;     //Height of the cylinder shape
+    cylR   = hsegD/2;            //Radius of the cylinder shape
  
-//Female segment - negative
-module hingeFemaleNeg(wallW = defWallW,    //Wall thickness
-                      gapW  = defGapW,     //Gap between moving parts
-                      segW  = defHSegW,    //Length of the segment
-                      segD  = defHSegD) {  //Diameter of the segment
-
-    //Local variables
-    cylH = segW+2*gapW*sqrt(2);            //Height of the cylinder shape
-    cylR = gapW+segD/2;                    //Diameter of the cylinder shape
-
     hull() {
         translate([-cylH/2,0,0]) rotate([0,90,0]) cylinder4n(h=cylH,r=cylR);
-        translate([-cylH/2,-cylR,-2*cylR])         cube([cylH,cylR-gapW,2*cylR]);
-     }
- }
- 
+        translate([-cylH/2,gapW,-2*cylR])         cube([cylH,cylR-gapW,2*cylR]);
+    }
+    translate([cylH/2,0,0])  rotate([0,90,0])  cylinder4n(h=cylR,r1=cylR,r2=0);
+    translate([-cylH/2,0,0]) rotate([0,270,0]) cylinder4n(h=cylR,r1=cylR,r2=0);    
+}
 
-//
-if ($preview) {
+//Negative lower hinge segment
+module lowerHSegNeg(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = hsegW+gapW*sq2;     //Height of the cylinder shape
+    cylR   = gapW+hsegD/2;       //Radius of the cylinder shape
+    conR   = hsegD/2;            //Radius of the cone shape
 
-//    hingeMalePos();
-//    hingeMaleNeg();
-    hingeFemalePos();
-    hingeFemaleNeg();
+    rotate([180,0,0]) {
+        hull() {
+            translate([-cylH/2,0,0]) rotate([0,90,0]) cylinder4n(h=cylH,r=cylR);
+            translate([-cylH/2,gapW,-2*cylR])         cube([cylH,cylR-gapW,2*cylR]);
+        }
+        translate([cylH/2,0,0]) rotate([0,90,0])   cylinder4n(h=conR,r1=conR,r2=0);
+        translate([-cylH/2,0,0]) rotate([0,270,0]) cylinder4n(h=conR,r1=conR,r2=0);    
+    }   
+}
+
+//Positive upper hinge segment
+module upperHSegPos(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = hsegW-gapW*sq2;     //Height of the cylinder shape
+    cylR   = hsegD/2;            //Radius of the cylinder shape
+
+    difference() {
+        hull() {
+            translate([cylH/2,0,0]) rotate([0,270,0])         cylinder4n(h=cylH,r=cylR);
+            translate([-cylH/2,gapW,0]) cube([cylH,cylR-gapW,2*cylR]);
+        }
+        union() {
+            translate([-cylH/2,0,0]) rotate([0,90,0])  cylinder4n(h=cylR,r1=cylR,r2=0);
+            translate([cylH/2,0,0])  rotate([0,270,0]) cylinder4n(h=cylR,r1=cylR,r2=0);
+            
+        }
+    }
+}
+
+//Negative upper hinge segment
+module upperHSegNeg(pSet,$fn=24) {
+    //Short cuts
+    wallW  = pSet[idxWallW];     //Wall thickness
+    gapW   = pSet[idxGapW];      //Gap between moving parts
+    hsegW  = pSet[idxHSegW];     //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];     //Diameter of a hinge segment
+    sq2    = sqrt(2);            //Square root of 2
+    cylH   = hsegW+gapW*sq2;     //Height of the cylinder shape
+    cylR   = gapW+hsegD/2;       //Radius of the cylinder shape
+    conR   = hsegD/2;            //Radius of the cone shape
+
+    rotate([180,0,0]) {
+        hull() {
+            translate([cylH/2,0,0]) rotate([0,270,0]) cylinder4n(h=cylH,r=cylR);
+            translate([-cylH/2,gapW,0])               cube([cylH,cylR-gapW,2*cylR]);
+        }
+    }
+}
+
+//Dummy hinge segment
+module dummyHSeg(pSet) {
+//    cube(center=true);
+}
+
+//Hinge assembly
+//children(0): Start segment
+//children(1): Odd segment
+//children(2): Even segment  
+//children(3): Odd end segment
+//children(4): Even end segment
+module hingeAssembly(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    hsegW  = pSet[idxHSegW];  //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
+
+    //Hinge alignment
+    hsegCnt = floor((idimX-2*wallW-hsegD)/hsegW); //Number of hinge segments (end pieces count as half)
+    hdimX   = hsegW*hsegCnt;                      //X-dimension of the hinge (without end piece spheres)
+
+    //Start segment
+    translate([-hdimX/2,0,0]) children(0);
+
+    //End segment
+    translate([hdimX/2,0,0]) 
+    if (is_even(hsegCnt)) children(4); 
+    else                  children(3);
+        
+    //Inner segments
+    for (idx=[1:hsegCnt-1]) 
+        translate([(idx*hsegW)-hdimX/2,0,0])
+        if (is_even(idx)) children(2); 
+        else              children(1);
+
+}
+
+//Positive lower hinge 
+module lowerHingePos(pSet) {
+    hingeAssembly(pSet) {
+        lowerHStartPos(pSet); //children(0): Start segment
+        dummyHSeg(pSet);      //children(1): Odd segment
+        lowerHSegPos(pSet);   //children(2): Even segment  
+        dummyHSeg(pSet);      //children(3): Odd end segment
+        lowerHEndPos(pSet);   //children(4): Even end segment
+    }
+}   
+        
+//Negative lower hinge 
+module lowerHingeNeg(pSet) {
+    hingeAssembly(pSet) {
+        dummyHSeg(pSet);      //children(0): Start segment
+        upperHSegNeg(pSet);   //children(1): Odd segment
+        dummyHSeg(pSet);      //children(2): Even segment  
+        upperHEndNeg(pSet);   //children(3): Odd end segment
+        dummyHSeg(pSet);      //children(4): Even end segment
+    }
+}
+
+//Positive upper hinge 
+module upperHingePos(pSet) {
+    hingeAssembly(pSet) {
+        dummyHSeg(pSet);      //children(0): Start segment
+        upperHSegPos(pSet);   //children(1): Odd segment
+        dummyHSeg(pSet);      //children(2): Even segment  
+        upperHEndPos(pSet);   //children(3): Odd end segment
+        dummyHSeg(pSet);      //children(4): Even end segment
+    }
+}
+
+//Negative upper hinge 
+module upperHingeNeg(pSet) {
+    hingeAssembly(pSet) {
+        lowerHStartNeg(pSet); //children(0): Start segment
+        dummyHSeg(pSet);      //children(1): Odd segment
+        lowerHSegNeg(pSet);   //children(2): Even segment  
+        dummyHSeg(pSet);      //children(3): Odd end segment
+        lowerHEndNeg(pSet);   //children(4): Even end segment
+    }
+}
+
+//Attach lower hinge 
+module attachLowerHinge(pSet) {
+    //Short cuts
+    stage  = pSet[idxStage];  //Design stage  
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    gapW   = pSet[idxGapW];   //Gap between moving parts
+    hsegW  = pSet[idxHSegW];  //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
+    slackX = pSet[idxSlackX]; //Object's slack in X direction
+    slackY = pSet[idxSlackY]; //Object's slack in Y direction
+    slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
+    inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
+    ghX    = pSet[idxGhX];    //Grip hole positions
+    ghW    = pSet[idxGhW];    //Grip hole width
+    labT   = pSet[idxLabT];   //Label text
+    labS   = pSet[idxLabS];   //Label size
 
 
-    //Lower shell
-//    translate([-defIdimX/2,defGapW,-defIdimZ]) cube([defIdimX,defIdimZ,defIdimZ]);
-    
-    //Upper shell
-//    translate([-defIdimX/2,-defGapW-defIdimZ,-defIdimZ]) cube([defIdimX,defIdimZ,defIdimZ]);
-    
-    
-  
+}
+
+//Attach upper hinge 
+module attachUpperHinge(pSet) {
+    //Short cuts
+    stage  = pSet[idxStage];  //Design stage  
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    wallW  = pSet[idxWallW];  //Wall thickness
+    gapW   = pSet[idxGapW];   //Gap between moving parts
+    hsegW  = pSet[idxHSegW];  //Length of a hinge segment
+    hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
+    slackX = pSet[idxSlackX]; //Object's slack in X direction
+    slackY = pSet[idxSlackY]; //Object's slack in Y direction
+    slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
+    inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
+    ghX    = pSet[idxGhX];    //Grip hole positions
+    ghW    = pSet[idxGhW];    //Grip hole width
+    labT   = pSet[idxLabT];   //Label text
+    labS   = pSet[idxLabS];   //Label size
+
+
 }
 
 
 
+//Preview
+if ($preview) {
+
+    //Hinge segments   
+//    color("green") lowerHStartPos(pSet());
+//    #color("red")  lowerHStartNeg(pSet());
+//    color("green") lowerHEndPos(pSet());
+//    #color("red")  lowerHEndNeg(pSet());
+//    color("green") upperHEndPos(pSet());
+//    #color("red")  upperHEndNeg(pSet());
+//    color("green") lowerHSegPos(pSet());
+//    #color("red")  lowerHSegNeg(pSet());
+//    color("green") upperHSegPos(pSet());
+//    #color("red")  upperHSegNeg(pSet());
+//    color("green") lowerHingePos(pSet());
+//    #color("red")  lowerHingeNeg(pSet());
+    color("green") upperHingePos(pSet());
+    #color("red")  upperHingeNeg(pSet());
+
+}
