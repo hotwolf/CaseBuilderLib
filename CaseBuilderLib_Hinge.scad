@@ -258,8 +258,8 @@ module hingeAssembly(pSet) {
     hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
 
     //Hinge alignment
-    hsegCnt = floor((idimX-2*wallW-hsegD)/hsegW); //Number of hinge segments (end pieces count as half)
-    hdimX   = hsegW*hsegCnt;                      //X-dimension of the hinge (without end piece spheres)
+    hsegCnt = floor((idimX-2*wallW)/hsegW); //Number of hinge segments (end pieces count as half)
+    hdimX   = hsegW*hsegCnt;                //X-dimension of the hinge (without end piece spheres)
 
     //Start segment
     translate([-hdimX/2,0,0]) children(0);
@@ -324,50 +324,30 @@ module upperHingeNeg(pSet) {
 //Attach lower hinge 
 module attachLowerHinge(pSet) {
     //Short cuts
-    stage  = pSet[idxStage];  //Design stage  
-    idimX  = pSet[idxIdimX];  //Inner X dimension
-    idimY  = pSet[idxIdimY];  //Inner Y dimension
-    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension        
     wallW  = pSet[idxWallW];  //Wall thickness
     gapW   = pSet[idxGapW];   //Gap between moving parts
-    hsegW  = pSet[idxHSegW];  //Length of a hinge segment
-    hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
-    slackX = pSet[idxSlackX]; //Object's slack in X direction
-    slackY = pSet[idxSlackY]; //Object's slack in Y direction
-    slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
-    inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
-    ghX    = pSet[idxGhX];    //Grip hole positions
-    ghW    = pSet[idxGhW];    //Grip hole width
-    labT   = pSet[idxLabT];   //Label text
-    labS   = pSet[idxLabS];   //Label size
 
-
+    difference() {
+        children(0);     
+        translate([0,gapW+wallW+idimY/2,0]) rotate([0,0,180]) lowerHingeNeg(pSet); 
+    }
+    translate([0,gapW+wallW+idimY/2,0]) rotate([0,0,180]) lowerHingePos(pSet);  
 }
 
 //Attach upper hinge 
 module attachUpperHinge(pSet) {
     //Short cuts
-    stage  = pSet[idxStage];  //Design stage  
-    idimX  = pSet[idxIdimX];  //Inner X dimension
-    idimY  = pSet[idxIdimY];  //Inner Y dimension
-    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension        
     wallW  = pSet[idxWallW];  //Wall thickness
     gapW   = pSet[idxGapW];   //Gap between moving parts
-    hsegW  = pSet[idxHSegW];  //Length of a hinge segment
-    hsegD  = pSet[idxHSegD];  //Diameter of a hinge segment
-    slackX = pSet[idxSlackX]; //Object's slack in X direction
-    slackY = pSet[idxSlackY]; //Object's slack in Y direction
-    slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
-    inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
-    ghX    = pSet[idxGhX];    //Grip hole positions
-    ghW    = pSet[idxGhW];    //Grip hole width
-    labT   = pSet[idxLabT];   //Label text
-    labS   = pSet[idxLabS];   //Label size
 
-
+    difference() {
+        children(0);     
+        translate([0,gapW+wallW+idimY/2,0]) rotate([0,0,180]) upperHingeNeg(pSet); 
+    }
+    translate([0,gapW+wallW+idimY/2,0]) rotate([0,0,180]) upperHingePos(pSet);  
 }
-
-
 
 //Preview
 if ($preview) {
@@ -385,7 +365,26 @@ if ($preview) {
 //    #color("red")  upperHSegNeg(pSet());
 //    color("green") lowerHingePos(pSet());
 //    #color("red")  lowerHingeNeg(pSet());
-    color("green") upperHingePos(pSet());
-    #color("red")  upperHingeNeg(pSet());
+//    color("green") upperHingePos(pSet());
+//    #color("red")  upperHingeNeg(pSet());
 
+    attachLowerHinge(pSet()) {
+        //Short cuts
+        pSet   = pSet();
+        idimX  = pSet[idxIdimX];  //Inner X dimension        
+        idimY  = pSet[idxIdimY];  //Inner Y dimension        
+        wallW  = pSet[idxWallW];  //Wall thickness
+        gapW   = pSet[idxGapW];   //Gap between moving parts
+        translate([-idimX/2,-20+wallW+idimY/2,-20]) cube([idimX,20,20]);
+    }
+    
+    attachUpperHinge(pSet()) {
+        //Short cuts
+        pSet   = pSet();
+        idimX  = pSet[idxIdimX];  //Inner X dimension        
+        idimY  = pSet[idxIdimY];  //Inner Y dimension        
+        wallW  = pSet[idxWallW];  //Wall thickness
+        gapW   = pSet[idxGapW];   //Gap between moving parts
+        translate([-idimX/2,-20+wallW+idimY/2,0]) cube([idimX,20,20]);
+    }
 }

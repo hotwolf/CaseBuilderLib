@@ -30,6 +30,7 @@
 
 include <CaseBuilderLib_Common.scad>
 use     <CaseBuilderLib_Label.scad>
+use     <CaseBuilderLib_Hinge.scad>
 
 //Shell shape
 //===========
@@ -64,6 +65,7 @@ module shellShape(pSet) {
 //===========
 module lowerShell(pSet) {
     //Shell shape
+    attachLowerHinge(pSet)
     shellShape(pSet);
 }
 
@@ -72,5 +74,14 @@ module lowerShell(pSet) {
 module upperShell(pSet) {
     //Shell shape
     engraveLabel(pSet)
+    attachUpperHinge(pSet)
     rotate([180,0,0]) shellShape(pSet);
+}
+
+//Preview
+if ($preview) {
+
+    lowerShell(pSet());
+    upperShell(pSet());
+    
 }
