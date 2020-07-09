@@ -74,10 +74,20 @@ module lowerLockNeg(pSet) {
         translate([idimX/2,-idimY/2+knotD/2+knotOff,-idimZ/2+knotD/2])  rotate([0,90,0])  cylinder4n(h=wallW+1,d=stringD,$fn=12);        
     }
     
-    
-    
-    
-    
+    //Pull latch option
+    if (lockO==2) {
+
+
+
+    }
+ 
+    //Push latch option
+     if (lockO==3) {
+
+
+
+    }
+   
 }
 
 //Positive upper lock parts
@@ -136,7 +146,7 @@ module lockSpace(pSet) {
 if ($preview) {
 
     //Preview parameter set
-    prevPSet = pSet();
+    prevPSet = pSet(lockO=2);
     idimX    = prevPSet[idxIdimX];  //Inner X dimension        
     idimY    = prevPSet[idxIdimY];  //Inner Y dimension        
     idimZ    = prevPSet[idxIdimZ];  //Inner Z dimension        

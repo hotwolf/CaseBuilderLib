@@ -111,7 +111,7 @@ module CaseBuilder(pSet) {
         children(idx);
         
         //Show grip holes
-        color(ghC,0.60)        
+        color(ghC,0.75)        
         shift(pSet) ghShapes(pSet) 
         for (idx=[0:1:$children-1]) lowerCavShape(pSet) children(idx);
 
