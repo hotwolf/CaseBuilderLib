@@ -64,11 +64,11 @@ module clearance(pSet) {
   
     for (idx=[0:1:$children-1])  {
         hull() {
-            for (rotX=[0:90/steps:90]) {
+            for (rotX=[0:-90/steps:-90]) {
                 difference() {             
-                    translate([0,-offset,0])
-                    rotate([-rotX,0,0]) 
                     translate([0,offset,0])
+                    rotate([-rotX,0,0]) 
+                    translate([0,-offset,0])
                     children(0);
                     
                     lowerInfBb();

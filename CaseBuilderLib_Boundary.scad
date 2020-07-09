@@ -30,6 +30,10 @@
 
 include <CaseBuilderLib_Common.scad>
 
+//Local parameters
+//================
+errOff = 1; //Error indicator offset
+
 //Boundary box around the inner dimensions 
 module idimBb(pSet) {
     //Short cuts
@@ -68,10 +72,10 @@ module lowerInlBb(pSet) {
     idimZ  = pSet[idxIdimZ];  //Inner Z dimension
     inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
 
-    translate([0,0,(-idimZ/4)-(inlZ/2)]) cube([idimX,idimY,(idimZ/2)-inlZ],center=true);
+    translate([0,0,-idimZ/4-inlZ/2]) cube([idimX,idimY,(idimZ/2)-inlZ],center=true);
 }
 
-//Boundary box around the inner dimensions of the upper inlay
+//Boundary box around the inner dimensions if the opper inlay
 module upperInlBb(pSet) {
     //Short cuts
     idimX  = pSet[idxIdimX];  //Inner X dimension
@@ -79,61 +83,7 @@ module upperInlBb(pSet) {
     idimZ  = pSet[idxIdimZ];  //Inner Z dimension
     inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
 
-    translate([0,0,(idimZ/4)+(inlZ/2)]) cube([idimX,idimY,(idimZ/2)-inlZ],center=true);
-}
-
-//Boundary check against the inner dimensions (one child only)
-module idimBCheck(pSet) {
-    //Draw parts out of range range red
-    color("red")
-    difference() {
-        children(0);
-        idimBb(pSet);
-    }
-
-    //Draw parts within range green
-    color("green")
-    hull() 
-    intersection() {
-        children(0);
-        idimBb(pSet);
-    }           
-}
-
-//Boundary check against the inner dimensions of the lower shell (one child only)
-module lowerIdimBCheck(pSet) {
-    //Draw parts out of range range red
-    color("red")
-    difference() {
-        children(0);
-        lowerIdimBb(pSet);
-    }
-
-    //Draw parts within range green
-    color("green")
-    hull()
-    intersection() {
-        children(0);
-        lowerIdimBb(pSet);
-    }        
-}
-
-//Boundary check against the inner dimensions of the upper shell (one child only)
-module upperIdimBCheck(pSet) {
-    //Draw parts out of range range red
-    color("red")
-    difference() {
-        children(0);
-        upperIdimBb(pSet);
-    }
-
-    //Draw parts within range green
-    color("green")
-    hull()
-    intersection() {
-        children(0);
-        upperIdimBb(pSet);
-    }        
+    translate([0,0,idimZ/4+inlZ/2]) cube([idimX,idimY,(idimZ/2)-inlZ],center=true);
 }
 
 //Lower infinite boundary
@@ -145,4 +95,210 @@ module lowerInfBb() {
 module upperInfBb() {
     translate([0,0,inf/2]) cube([2*inf,2*inf,inf],center=true);
 }
+  
+//Lower outer boundary error indicators
+module lowerOuterBErr(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    //Negative X-Range check
+    rotate([0,-90,0])
+    translate([0,0,idimX/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([0,90,0])
+    intersection() {    
+        translate([-inf-idimX/2,-idimY/2,-idimZ/2]) cube([inf,idimY,idimZ/2]);
+        children();
+    }
     
+    //Positive X-Range check
+    rotate([0,90,0])
+    translate([0,0,idimX/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([0,-90,0])
+    intersection() {    
+        translate([idimX/2,-idimY/2,-idimZ/2]) cube([inf,idimY,idimZ/2]);
+        children();
+    }
+ 
+    //Negative Y-Range check
+    rotate([90,0,0])
+    translate([0,0,idimY/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([-90,0,0])
+    intersection() {    
+        translate([-idimX/2,-inf-idimY/2,-idimZ/2]) cube([idimX,inf,idimZ/2]);
+        children();
+    }
+   
+     //Positive Y-Range check
+    rotate([-90,0,0])
+    translate([0,0,idimY/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([90,0,0])
+    intersection() {    
+        translate([-idimX/2,idimY/2,-idimZ/2]) cube([idimX,inf,idimZ/2]);
+        children();
+    }
+   
+    //Negative Z-Range check
+    rotate([180,0,0])
+    translate([0,0,idimZ/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([180,0,0])
+    intersection() {    
+        translate([-idimX/2,-idimY/2,-inf-idimZ/2]) cube([idimX,idimY,inf]);
+        children();
+    }
+}
+
+//Upper outer boundary error indicators
+module upperOuterBErr(pSet) {
+    rotate([180,0,0])
+    lowerOuterBErr(pSet)
+    rotate([180,0,0]) children();
+}
+
+//All outer boundary error indicators
+module outerBErr(pSet) {
+  lowerOuterBErr(pSet) children();
+  upperOuterBErr(pSet) children();
+}
+
+//Lower inner boundary error indicators
+//children(0): object
+//children(1): inner boundary
+module lowerInnerBErr(pSet) {
+    //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    //Negative X-Range check
+    rotate([0,-90,0])
+    translate([0,0,idimX/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([0,90,0])
+    intersection() {
+        intersection() {    
+            translate([-idimX/2,-idimY/2,-idimZ/2]) cube([idimX/2,idimY,idimZ/2]);
+            children(1);
+        }
+        children(0);
+    }
+    
+    //Positive X-Range check
+    rotate([0,90,0])
+    translate([0,0,idimX/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([0,-90,0])
+     intersection() {
+        intersection() {    
+            translate([0,-idimY/2,-idimZ/2]) cube([idimX/2,idimY,idimZ/2]);
+            children(1);
+        }
+        children(0);
+    }
+    
+    //Negative Y-Range check
+    rotate([90,0,0])
+    translate([0,0,idimY/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([-90,0,0])
+    intersection() {
+        intersection() {    
+            translate([-idimX/2,-idimY/2,-idimZ/2]) cube([idimX,idimY/2,idimZ/2]);
+            children(1);
+        }
+        children(0);
+    }
+  
+     //Positive Y-Range check
+    rotate([-90,0,0])
+    translate([0,0,idimY/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([90,0,0])
+    intersection() {
+        intersection() {    
+            translate([-idimX/2,0,-idimZ/2]) cube([idimX,idimY/2,idimZ/2]);
+            children(1);
+        }
+        children(0);
+    }
+   
+    //Negative Z-Range check
+    rotate([180,0,0])
+    translate([0,0,idimZ/2+errOff])
+    linear_extrude(1)
+    projection()
+    rotate([180,0,0])
+
+    intersection() {
+        intersection() {    
+            translate([-idimX/2,-idimY/2,-idimZ/2]) cube([idimX,idimY,idimZ/2]);
+            children(1);
+        }
+        children(0);
+    }
+}
+
+//Upper inner boundary error indicators
+//children(0): object
+//children(1): inner boundary
+module upperInnerBErr(pSet) {
+    rotate([180,0,0])
+    lowerInnerBErr(pSet) {
+       rotate([180,0,0]) children(0);
+       rotate([180,0,0]) children(1);
+    }
+}
+
+//Trim object to lower boundary
+module lowerTrim(pSet) {
+   //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    intersection() {
+        translate([-idimX/2,-idimY/2,-idimZ/2]) cube([idimX,idimY,idimZ/2]);
+        children();
+    }
+}
+
+//Trim object to upper boundary
+module upperTrim(pSet) {
+   //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    intersection() {
+        translate([-idimX/2,-idimY/2,0]) cube([idimX,idimY,idimZ/2]);
+        children();
+    }
+}
+
+//Trim object to over all boundary
+module trim(pSet) {
+   //Short cuts
+    idimX  = pSet[idxIdimX];  //Inner X dimension
+    idimY  = pSet[idxIdimY];  //Inner Y dimension
+    idimZ  = pSet[idxIdimZ];  //Inner Z dimension
+
+    intersection() {
+        translate([-idimX/2,-idimY/2,-idimZ/2]) cube([idimX,idimY,idimZ]);
+        children();
+    }
+}

@@ -62,7 +62,7 @@ Stage=1; // [1:Model, 2:Check, 3:Generate]
 
 /* [Dimensions] */
 //Inner X dimension
-IdimX=100; // [1:200]
+IdimX=70; // [1:200]
 //Inner Y dimension
 IdimY=50;  // [1:200]
 //Inner Y dimension
@@ -78,19 +78,25 @@ Gh3X=-100; // [-100:100]
 
 /* [Label] */
 //Label text
-LabT="Optional label!";
+LabT="Optional label";
 //Label size
-LabS=-10; // [0:40]
+LabS=8; // [0:40]
 
-CaseBuilder(pSet(stage=Stage,             //Design stage  
-                 idimX=IdimX,             //Inner X dimension
-                 idimY=IdimY,             //Inner X dimension
-                 idimZ=IdimZ,             //Inner X dimension
-                 ghX  = [Gh1X,Gh2X,Gh3X], //Grip hole offsets
-                 labT = LabT,             //Label text
-                 labS = LabS)) {          //Label size
+/* [Lock] */
+//Lock Option
+LockO=1; // [0:None, 1:Elastic String, 2:Pull Latch, 3: Push Latch]
+
+CaseBuilder(pSet(stage=Stage,            //Design stage  
+                 idimX=IdimX,            //Inner X dimension
+                 idimY=IdimY,            //Inner X dimension
+                 idimZ=IdimZ,            //Inner X dimension
+                   ghX=[Gh1X,Gh2X,Gh3X], //Grip hole offsets
+                  labT=LabT,             //Label text
+                  labS=LabS,             //Label size
+                 lockO=LockO)) {         //Label size
 
         //!!! Your model goes here !!!
-        translate([0,0,-12.5]) cylinder(25,d1=30,d2=0);     
+        translate([0,0,-12.5]) cylinder(25,d1=30,d2=0);
+
 
 }

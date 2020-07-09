@@ -34,6 +34,7 @@ use     <CaseBuilderLib_Cavity.scad>
 use     <CaseBuilderLib_GripHole.scad>
 use     <CaseBuilderLib_Shell.scad>
 use     <CaseBuilderLib_Label.scad>
+use     <CaseBuilderLib_Lock.scad>
 
 //Main builder module
 module CaseBuilder(pSet) {
@@ -54,64 +55,94 @@ module CaseBuilder(pSet) {
     ghW    = pSet[idxGhW];    //Grip hole width
     labT   = pSet[idxLabT];   //Label text
     labS   = pSet[idxLabS];   //Label size
+    lockO  = pSet[idxLockO];  //Lock option
 
     //Model stage
     //===========
     if ((stage==1)&&($preview)) {
 
         //Draw children and color code boundary violations
-        for (idx=[0:1:$children-1])  {
-            idimBCheck(pSet) children(idx);
-        }
-                
+        color(objC) trim(pSet) children();
+               
         //Draw grip hole positions
-        color("yellow",0.55)
-        ghPos(pSet);
+        color(ghC,0.55) ghPos(pSet);
       
         //Visualize inner dimensions
-        color("gray",0.25) upperIdimBb(pSet);
-        color("gray",0.45) lowerIdimBb(pSet);
+        color(dimC,0.25) upperIdimBb(pSet);
+        color(dimC,0.45) lowerIdimBb(pSet);
+
+        //Draw error
+        color(errC)  outerBErr(pSet) children();
         
         //Preview label
-        color("gray",0.75) flatLabel(pSet);
+        color(labC,0.75) flatLabel(pSet);
     }       
 
     //Check stage
     //===========
     if ((stage==2)&&($preview)) {
     
-        //Show lower cavity
-        for (idx=[0:1:$children-1])  {
+       //Show lock restictions
+        if (lockO!=0) {
+            color(dimC,0.65) 
             shift(pSet) 
-            lowerIdimBCheck(pSet) 
-            difference() {
-                lowerCavShape(pSet) children(idx);
-                upperInfBb();
-             }
+            lowerTrim(pSet)
+            lockSpace(pSet);
+            color(dimC,0.45)
+            open(pSet)
+            upperTrim(pSet) 
+            lockSpace(pSet);               
         }
-
+         
+        //Show lower cavity
+        for (idx=[0:1:$children-1])
+        color(cavC) 
+        shift(pSet) 
+        lowerTrim(pSet)
+        lowerCavShape(pSet) 
+        children(idx);
+            
         //Show upper cavity
-        for (idx=[0:1:$children-1])  {
-            open(pSet) 
-            upperIdimBCheck(pSet)
-            difference() {
-                upperCavShape(pSet) children(idx);
-                lowerInfBb();
-            }
-        }
+        for (idx=[0:1:$children-1])
+        color(cavC) 
+        open(pSet)
+        upperTrim(pSet)
+        upperCavShape(pSet) 
+        children(idx);
         
         //Show grip holes
-        color("yellow",0.65)
+        color(ghC,0.60)        
         shift(pSet) ghShapes(pSet) 
         for (idx=[0:1:$children-1]) lowerCavShape(pSet) children(idx);
-                
+
+        //Show lower errors indicators
+        color(errC)
+        shift(pSet) 
+        for (idx=[0:1:$children-1]) {
+             lowerOuterBErr(pSet) lowerCavShape(pSet) children(idx);
+             lowerInnerBErr(pSet) {
+                 lowerCavShape(pSet) children(idx);
+                 lockSpace(pSet);
+             }
+         }
+ 
+        //Show uppwer errors indicators
+        color(errC)
+        open(pSet) 
+        for (idx=[0:1:$children-1]) {
+             upperOuterBErr(pSet) upperCavShape(pSet) children(idx);
+             lowerInnerBErr(pSet) {
+                 upperCavShape(pSet) children(idx);
+                 lockSpace(pSet);
+             }
+         }
+ 
         //Visualize inner dimensions
-        color("gray",0.45) shift(pSet) lowerIdimBb(pSet);
-        color("gray",0.25) open(pSet)  upperIdimBb(pSet);
+        color(dimC,0.45) shift(pSet) lowerIdimBb(pSet);
+        color(dimC,0.25) open(pSet)  upperIdimBb(pSet);
 
         //Preview label
-        color("gray",0.75) open(pSet) flatLabel(pSet);
-
+        color(labC,0.75) open(pSet) flatLabel(pSet);
     }
 
     //Generate stage
@@ -119,7 +150,7 @@ module CaseBuilder(pSet) {
    if ((stage==3)||(!$preview)) {
 
         //Draw lower inlay
-        color("orange")
+        color(filC)
         shift(pSet) 
         difference() {
             lowerInlBb(pSet);
@@ -129,38 +160,39 @@ module CaseBuilder(pSet) {
                 //Grip holes
                 ghShapes(pSet) 
                 for (idx=[0:1:$children-1]) lowerCavShape(pSet) children(idx);
+                //Lock
+                lowerLockNeg(pSet);
             }   
         } 
 
         //Draw upper inlay
-        color("orange")
+        color(filC)
         open(pSet)
         difference() {
             upperInlBb(pSet);
-            for (idx=[0:1:$children-1]) upperCavShape(pSet) children(idx);
+            union() {
+                //Cavity
+                for (idx=[0:1:$children-1]) upperCavShape(pSet) children(idx);
+                //Lock
+                lowerLockNeg(pSet);
+            }
         } 
-
+ 
         //Draw lower shell
-        color("orange")
+        color(filC)
         shift(pSet) lowerShell(pSet);
 
         //Draw upper shell
-        color("orange")
+        color(filC)
         open(pSet) upperShell(pSet);
 
         //Hover object uver open case
         if ($preview) {
-            color("yellow")
+            color(objC)
             translate([0,0,0]) shift(pSet) children();
         }
     }
 }
-
-
-
-
-
-
 
 if ($preview) {
 

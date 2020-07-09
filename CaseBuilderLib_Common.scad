@@ -28,77 +28,91 @@
 //#                                                                             #
 //###############################################################################
 
+//Color scheme
+//============
+objC      = "yellow"; //Object color
+filC      = "orange"; //Filament color
+errC      = "red";    //Error color
+cavC      = "blue";  //Cavity color
+ghC       = "blue";  //Grip hole color
+dimC      = "gray";   //Color of dimension indicators
+labC      = "gray";   //Label color
+
 //Default values
 //==============
-defStage  =   1;   //Design stage
-defIdimX  = 100;   //Inner X dimension
-defIdimY  =  50;   //Inner Y dimension
-defIdimZ  =  30;   //Inner Z dimension
-defWallW  =   3;   //Wall thickness
-defGapW   =   0.2; //Gap between moving parts
-defHSegW  =  10;   //Length of a hinge segment
-defHSegD  =   5;   //Diameter of a hinge segment
-defSlackX =   2;   //Object's slack in X direction
-defSlackY =   2;   //Object's slack in Y direction
-defSlackZ =   1;   //Object's slack in Z direction
-defInlZ   =   3;   //Inlay offset in Z direction
-defGhX    = [0];   //Grip hole positions
-defGhW    =  15;   //Grip hole width
-defLabT   =  "";   //Label text
-defLabS   =   0;   //Label size
+defStage  =   1;      //Design stage
+defIdimX  =  70;      //Inner X dimension
+defIdimY  =  50;      //Inner Y dimension
+defIdimZ  =  30;      //Inner Z dimension
+defWallW  =   3;      //Wall thickness
+defGapW   =   0.2;    //Gap between moving parts
+defHSegW  =  10;      //Length of a hinge segment
+defHSegD  =   5;      //Diameter of a hinge segment
+defSlackX =   2;      //Object's slack in X direction
+defSlackY =   2;      //Object's slack in Y direction
+defSlackZ =   1;      //Object's slack in Z direction
+defInlZ   =   3;      //Inlay offset in Z direction
+defGhX    = [0];      //Grip hole positions
+defGhW    =  15;      //Grip hole width
+defLabT   =  "";      //Label text
+defLabS   =   8;      //Label font size
+defLockO  =   1;      //Lock option     
 
 //Parameter set
 //=============
-idxStage  =   0;   //Design stage
-idxIdimX  =   1;   //Inner X dimension
-idxIdimY  =   2;   //Inner Y dimension
-idxIdimZ  =   3;   //Inner Z dimension
-idxWallW  =   4;   //Wall thickness
-idxGapW   =   5;   //Gap between moving parts
-idxHSegW  =   6;   //Length of a hinge segment
-idxHSegD  =   7;   //Diameter of a hinge segment
-idxSlackX =   8;   //Object's slack in X direction
-idxSlackY =   9;   //Object's slack in Y direction
-idxSlackZ =  10;   //Object's slack in Z direction
-idxInlZ   =  11;   //Inlay offset in Z direction
-idxGhX    =  12;   //Grip hole positions
-idxGhW    =  13;   //Grip hole width
-idxLabT   =  14;   //Label text
-idxLabS   =  15;   //Label size
+idxStage  =   0;      //Design stage
+idxIdimX  =   1;      //Inner X dimension
+idxIdimY  =   2;      //Inner Y dimension
+idxIdimZ  =   3;      //Inner Z dimension
+idxWallW  =   4;      //Wall thickness
+idxGapW   =   5;      //Gap between moving parts
+idxHSegW  =   6;      //Length of a hinge segment
+idxHSegD  =   7;      //Diameter of a hinge segment
+idxSlackX =   8;      //Object's slack in X direction
+idxSlackY =   9;      //Object's slack in Y direction
+idxSlackZ =  10;      //Object's slack in Z direction
+idxInlZ   =  11;      //Inlay offset in Z direction
+idxGhX    =  12;      //Grip hole positions
+idxGhW    =  13;      //Grip hole width
+idxLabT   =  14;      //Label text
+idxLabS   =  15;      //Label size
+idxLockO  =  16;      //Lock option     
 
-function pSet(stage  = defStage,  //Design stage
-              idimX  = defIdimX,  //Inner X dimension
-              idimY  = defIdimY,  //Inner Y dimension
-              idimZ  = defIdimZ,  //Inner Z dimension
-              wallW  = defWallW,  //Wall thickness
-              gapW   = defGapW,   //Gap between moving parts
-              hSegW  = defHSegW,  //Length of a hinge segment
-              hSegD  = defHSegD,  //Diameter of a hinge segment
-              slackX = defSlackX, //Object's slack in X direction
-              slackY = defSlackY, //Object's slack in Y direction
-              slackZ = defSlackZ, //Object's slack in Z direction
-              inlZ   = defInlZ,   //Inlay offset in Z direction
-              ghX    = defGhX,    //Grip hole positions
-              ghW    = defGhW,    //Grip hole width
-              labT   = defLabT,   //Label text
-              labS   = defLabS) = //Label size
-             [stage,              //Design stage
-              idimX,              //Inner X dimension
-              idimY,              //Inner Y dimension
-              idimZ,              //Inner Z dimension
-              wallW,              //Wall thickness
-              gapW,               //Gap between moving parts
-              hSegW,              //Length of a hinge segment
-              hSegD,              //Diameter of a hinge segment
-              slackX,             //Object's slack in X direction
-              slackY,             //Object's slack in Y direction
-              slackZ,             //Object's slack in Z direction
-              inlZ,               //Inlay offset in Z direction
-              ghX,                //Grip hole positions
-              ghW,                //Grip hole width
-              labT,               //Label text
-              labS];              //Label size
-                          
+function pSet(stage  = defStage,   //Design stage
+              idimX  = defIdimX,   //Inner X dimension
+              idimY  = defIdimY,   //Inner Y dimension
+              idimZ  = defIdimZ,   //Inner Z dimension
+              wallW  = defWallW,   //Wall thickness
+              gapW   = defGapW,    //Gap between moving parts
+              hSegW  = defHSegW,   //Length of a hinge segment
+              hSegD  = defHSegD,   //Diameter of a hinge segment
+              slackX = defSlackX,  //Object's slack in X direction
+              slackY = defSlackY,  //Object's slack in Y direction
+              slackZ = defSlackZ,  //Object's slack in Z direction
+              inlZ   = defInlZ,    //Inlay offset in Z direction
+              ghX    = defGhX,     //Grip hole positions
+              ghW    = defGhW,     //Grip hole width
+              labT   = defLabT,    //Label text
+              labS   = defLabS,    //Label size
+              lockO  = defLockO) = //Lock option     
+             [stage,               //Design stage
+              idimX,               //Inner X dimension
+              idimY,               //Inner Y dimension
+              idimZ,               //Inner Z dimension
+              wallW,               //Wall thickness
+              gapW,                //Gap between moving parts
+              hSegW,               //Length of a hinge segment
+              hSegD,               //Diameter of a hinge segment
+              slackX,              //Object's slack in X direction
+              slackY,              //Object's slack in Y direction
+              slackZ,              //Object's slack in Z direction
+              inlZ,                //Inlay offset in Z direction
+              ghX,                 //Grip hole positions
+              ghW,                 //Grip hole width
+              labT,                //Label text
+              labS,                //Label size
+              lockO];              //Lock option     
+                         
  //Common variables             
 inf = 10000;                      //Huge number
 
@@ -132,6 +146,11 @@ module open(pSet) {
     rotate([180,0,0]) translate([0,-gapW-wallW-idimY/2,0]) children(0); 
 }
 
+//Combined translate and rotate
+module transrot(trans=[0,0,0],rot=[0,0,0]) {
+    translate(trans) rotate(rot) children();
+}
+
 //Common shapes
 //=============
 //Cylinder with multiple of four sides
@@ -147,10 +166,10 @@ module cylinder4n(h,
          is_undef(r1) ?
          is_undef(d)  ? r : d/2 : r1 : d1/2;        
                     
-     //Second radius                
+    //Second radius                
     R2 = is_undef(d2) ?
          is_undef(r2) ?
-         is_undef(d)  ? r : d/2 : r2 : d1/2;        
+         is_undef(d)  ? r : d/2 : r2 : d2/2;        
                     
     cylinder(h=h,r1=R1,r2=R2,$fn=r2sides4n(max(R1,R2)));
 }
@@ -158,7 +177,7 @@ module cylinder4n(h,
 
 module circle4n(r, d = undef) {
     R = is_undef(d) ? r : d / 2;
-    circle(R, $fn = r2sides4n(R));
+    circle(R,$fn=r2sides4n(R));
 }
   
 //Semi circle in the positive Y domain (reuse from NopSCADlib)
@@ -186,7 +205,7 @@ module quadrant4n(r, d = undef)
 //Sphere with multiple of 4 vertices (reuse from NopSCADlib)
 module sphere4n(r = 1, d = undef) {
     R = is_undef(d) ? r : d / 2;
-    rotate_extrude($fn = r2sides4n(R))
+    rotate_extrude($fn=r2sides4n(R))
         rotate(-90)
             semicircle4n(R);
 }         
@@ -194,7 +213,25 @@ module sphere4n(r = 1, d = undef) {
 //Hemiphere with multiple of 4 vertices
 module hemisphere4n(r = 1, d = undef, shs =false) {
     R = is_undef(d) ? r : d / 2;
-    rotate_extrude($fn = r2sides4n(R))
+    rotate_extrude($fn=r2sides4n(R))
         rotate(shs ? 90 : -90)
             quadrant4n(R);
-}         
+}
+
+//Torus with multiple of 4 vertices
+module torus4n(r1,            //Radius of the circle profile
+               r2,            //Radius of the sweep
+               d1    = undef, //Diameter of the circle profile
+               d2    = undef, //Diameter of the sweep
+               angle = 360) { //Angle of the sweep
+    //First radius                
+    R1 = is_undef(d1) ? r1 : d1/2;        
+
+    //Second radius                
+    R2 = is_undef(d2) ? r2 : d2/2;        
+
+    //Torus
+    rotate_extrude(angle=angle,$fn=r2sides4n(R1+R2))               
+    translate([R2,0,0])               
+    circle(R1,$fn=r2sides4n(R1));    
+}
