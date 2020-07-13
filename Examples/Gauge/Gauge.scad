@@ -49,7 +49,7 @@ IdimX=115; // [1:200]
 //Inner Y dimension
 IdimY=70;  // [1:200]
 //Inner Y dimension
-IdimZ=30;  // [1:200]
+IdimZ=29;  // [1:200]
 
 //Object offset in X direction
 ObjX=0; // [-50:50]

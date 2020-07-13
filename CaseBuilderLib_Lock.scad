@@ -21,7 +21,7 @@
 //# Description:                                                                #
 //#   A selection of lock options:                                              #
 //#     1. Elastic string                                                       #
-//#                                                                             #
+//#     2. Pull Latch                                                           #
 //#                                                                             #
 //###############################################################################
 //# Version History:                                                            #
@@ -76,9 +76,23 @@ module lowerLockNeg(pSet) {
     
     //Pull latch option
     if (lockO==2) {
-
-
-
+        intersection() {
+            hull() {
+                translate([-15-gapW,-10-idimY/2,-8])         cube([30+2*gapW,10,4]);
+                translate([-25-gapW,-10-idimY/2,-4+idimZ/2]) cube([50+2*gapW,10,4]);
+            }    
+            union() {       
+                hull() {
+                    translate([-idimX/2,-2-idimY/2,-4]) rotate([0,90,0]) cylinder4n(h=idimX,d=3);
+                    translate([-idimX/2,-2-idimY/2,-6]) rotate([0,90,0]) cylinder4n(h=idimX,d=3);
+                }
+                translate([-idimX/2,-2-wallW-idimY/2,-7.5]) cube([idimX,wallW,5]);
+                hull() {
+                    translate([-idimX/2,-2-wallW-idimY/2,-2.5]) cube([idimX,wallW,4]);
+                    translate([-idimX/2,-1-wallW-idimY/2,])    cube([idimX,wallW,2]);            
+                }
+            }        
+        }
     }
  
     //Push latch option
@@ -100,7 +114,24 @@ module upperLockPos(pSet) {
     gapW   = pSet[idxGapW];   //Gap between moving parts
     lockO  = pSet[idxLockO];  //Lock option
 
-
+    //Pull latch option
+    if (lockO==2) {
+        intersection() {
+            hull() {
+               translate([-15,-10-idimY/2,-8]) cube([30,10,4]);
+               translate([-25,-10-idimY/2,-4+idimZ/2]) cube([50,10,4]);
+            }
+            union() {
+                translate([-idimX/2,-2-idimY/2,-4]) rotate([0,90,0]) cylinder4n(h=idimX,d=3);
+                translate([-idimX/2,-2.75-idimY/2,-5.5]) rotate([0,90,0]) cylinder4n(h=idimX,d=1.5);
+                translate([-idimX/2,-3.5-idimY/2,-5.5]) cube([idimX,1.5,idimZ/2]);
+                hull() {
+                    translate([-idimX/2,-3.5-idimY/2,-6+idimZ/2])   cube([idimX,1.5,2]);
+                    translate([-idimX/2,-wallW-idimY/2,-2+idimZ/2]) cube([idimX,wallW,2]);
+                }
+            }
+        }
+    }
 }
 
 //Negative upper lock parts 
@@ -113,7 +144,16 @@ module upperLockNeg(pSet) {
     gapW   = pSet[idxGapW];   //Gap between moving parts
     lockO  = pSet[idxLockO];  //Lock option
 
-
+    //Pull latch option
+    if (lockO==2) {
+        intersection() {
+            hull() {
+                translate([-15-gapW,-10-idimY/2,-8])         cube([30+2*gapW,10,4]);
+                translate([-25-gapW,-10-idimY/2,-4+idimZ/2]) cube([50+2*gapW,10,4]);
+            }    
+            translate([-idimX/2,2*gapW-2-wallW-idimY/2,-1]) cube([idimX,wallW,-4+idimZ/2]);
+        }
+    }
 }
 
 //Attach lower lock
@@ -153,7 +193,9 @@ if ($preview) {
     wallW    = prevPSet[idxWallW];  //Wall thickness
     gapW     = prevPSet[idxGapW];   //Gap between moving parts
 
-    color("red") lowerLockNeg(prevPSet); 
+    color("red")   lowerLockNeg(prevPSet); 
+    color("green") upperLockPos(prevPSet);
+    color("red")   upperLockNeg(prevPSet);
 
     color("gray",0.25) translate([0,0,idimZ/4]) cube([idimX,idimY,idimZ/2],center=true);
     color("gray",0.45) translate([0,0,-idimZ/4]) cube([idimX,idimY,idimZ/2],center=true);
