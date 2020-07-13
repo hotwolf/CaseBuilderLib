@@ -38,21 +38,13 @@ module slack(pSet) {
     slackY = pSet[idxSlackY]; //Object's slack in Y direction
     slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
 
-    //Determine the number of steps
-    steps = r2sides4n(max(slackX, slackY));
-    
-    //Build slack shape
-    hull() {
-        for (angle=[0:360/steps:359]) {
-//            echo("angle: ", angle);
-            
-            translate([slackX*sin(angle),slackY*cos(angle),slackZ])  children(0);
-            translate([slackX*sin(angle),slackY*cos(angle),-slackZ]) children(0);
-        }
+    minkowski() {
+        translate([0,0,-slackZ]) scale([slackX,slackY,1]) cylinder4n(h=2*slackZ,r=1,$fn=r2sides4n(max(slackX,slackY)));
+        children();
     }
 }        
  
-//Add rotary clearance to the first child
+//Calculate rotary clearance
 module clearance(pSet) {
     //Short cuts
     idimY  = pSet[idxIdimY];                //Inner Y dimension
@@ -62,77 +54,56 @@ module clearance(pSet) {
     offset = gapW+wallW+idimY/2;            //Offset from pivot point
     steps  = r2sides4n(gapW+wallW+idimY)/4; //Determine rotary steps
   
-    for (idx=[0:1:$children-1])  {
-        hull() {
-            for (rotX=[0:-90/steps:-90]) {
-                difference() {             
-                    translate([0,offset,0])
-                    rotate([-rotX,0,0]) 
-                    translate([0,-offset,0])
-                    children(0);
-                    
-                    lowerInfBb();
-                }
-            }
+    hull() {
+        for (rotX=[0:-90/steps:-90]) {
+            upperIdimTrim(pSet)
+            translate([0,offset,0])
+            rotate([-rotX,0,0]) 
+            translate([0,-offset,0])
+            children();
         }
     }
 }
 
-//Add lower opening for the first child
+//Calculate lower opening
 module lowerOpening(pSet) {
     hull() {
-        difference() {
-            children(0);
-            upperInfBb();
-        }
         linear_extrude(1)
-        projection(cut=false) 
-        difference() {
-            children(0);
-            upperInfBb();
-        }
+        projection() 
+        lowerIdimTrim(pSet)
+        children();
+ 
+        lowerIdimTrim(pSet)
+        children();
     }
 }    
 
-//Add upper opening for the first child
+//Calculate upper opening
 module upperOpening(pSet) {
     hull() {
-        difference() {
-            children(0);
-            lowerInfBb();
-        }
-        translate([0,0,-1])
         linear_extrude(1)
-        projection(cut=false) 
-        difference() {
-            children(0);
-            lowerInfBb();
-        }
+        projection() 
+        upperIdimTrim(pSet)
+        children();
+ 
+        upperIdimTrim(pSet)
+        children();
     }
 }    
 
-//Lower cavity shape of the first child
-module lowerCavShape(pSet) {
+//Lower cavity shape
+module lowerCav(pSet) {
     //Cascade operations
-    lowerOpening(pSet) {
-        slack(pSet) {
-            children(0);
-        }
-    }
+    lowerOpening(pSet)
+    slack(pSet)
+    children();
 }
 
-//Upper cavity shape of the first child
-module upperCavShape(pSet) {
+//Upper cavity shape
+module upperCav(pSet) {
     //Cascade operations
-    upperOpening(pSet) {
-        clearance(pSet) {
-            slack(pSet) {
-                children(0);
-            }
-        }
-    }
+    upperOpening(pSet)
+    slack(pSet)
+    clearance(pSet)
+    children();
 }
-
-
-
-

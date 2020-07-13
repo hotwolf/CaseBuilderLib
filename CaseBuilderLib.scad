@@ -39,7 +39,10 @@ use     <CaseBuilderLib_Lock.scad>
 //Main builder module
 module CaseBuilder(pSet) {
     //Short cuts
-    stage  = pSet[idxStage];  //Design stage  
+    stage  = pSet[idxStage];  //Design stage
+    openA  = pSet[idxOpenA];  //Opening angle
+    uvisB  = pSet[idxUvisB];  //Show upper part
+    lvisB  = pSet[idxLvisB];  //Show lower part
     idimX  = pSet[idxIdimX];  //Inner X dimension
     idimY  = pSet[idxIdimY];  //Inner Y dimension
     idimZ  = pSet[idxIdimZ];  //Inner Z dimension
@@ -51,29 +54,34 @@ module CaseBuilder(pSet) {
     slackY = pSet[idxSlackY]; //Object's slack in Y direction
     slackZ = pSet[idxSlackZ]; //Object's slack in Z direction
     inlZ   = pSet[idxInlZ];   //Inlay offset in Z direction
+    objX   = pSet[idxObjX];   //Object offset in X direction 
+    objY   = pSet[idxObjY];   //Object offset in Y direction 
+    objZ   = pSet[idxObjZ];   //Object offset in Z direction 
+    hingeO = pSet[defHingeO]; //Hinge option        
+    lockO  = pSet[idxLockO];  //Lock option   
     ghX    = pSet[idxGhX];    //Grip hole positions
     ghW    = pSet[idxGhW];    //Grip hole width
     labT   = pSet[idxLabT];   //Label text
     labS   = pSet[idxLabS];   //Label size
-    lockO  = pSet[idxLockO];  //Lock option
-
+ 
     //Model stage
     //===========
     if ((stage==1)&&($preview)) {
 
-        //Draw children and color code boundary violations
-        color(objC) trim(pSet) children();
+        //Draw object
+        color(objC) 
+        objOff(pSet) 
+        children();
                
         //Draw grip hole positions
-        color(ghC,0.55) ghPos(pSet);
+        if (lvisB==true) { color(ghC,0.55) ghPos(pSet); }
+        echo("lvisB: ",LvisB); 
+
       
         //Visualize inner dimensions
-        color(dimC,0.25) upperIdimBb(pSet);
-        color(dimC,0.45) lowerIdimBb(pSet);
-
-        //Draw error
-        color(errC)  outerBErr(pSet) children();
-        
+        if (uvisB) color(dimC,0.25) upperIdimBb(pSet);
+        if (lvisB) color(dimC,0.35) lowerIdimBb(pSet);
+       
         //Preview label
         color(labC,0.75) flatLabel(pSet);
     }       
@@ -81,125 +89,158 @@ module CaseBuilder(pSet) {
     //Check stage
     //===========
     if ((stage==2)&&($preview)) {
-    
-       //Show lock restictions
-        if (lockO!=0) {
-            color(dimC,0.65) 
-            shift(pSet) 
-            lowerTrim(pSet)
-            lockSpace(pSet);
-            color(dimC,0.45)
-            open(pSet)
-            upperTrim(pSet) 
-            lockSpace(pSet);               
-        }
-         
-        //Show lower cavity
-        for (idx=[0:1:$children-1])
-        color(cavC) 
-        shift(pSet) 
-        lowerTrim(pSet)
-        lowerCavShape(pSet) 
-        children(idx);
+
+        //Lower part
+        lowerPos(pSet) {
             
-        //Show upper cavity
-        for (idx=[0:1:$children-1])
-        color(cavC) 
-        open(pSet)
-        upperTrim(pSet)
-        upperCavShape(pSet) 
-        children(idx);
-        
-        //Show grip holes
-        color(ghC,0.75)        
-        shift(pSet) ghShapes(pSet) 
-        for (idx=[0:1:$children-1]) lowerCavShape(pSet) children(idx);
-
-        //Show lower errors indicators
-        color(errC)
-        shift(pSet) 
-        for (idx=[0:1:$children-1]) {
-             lowerOuterBErr(pSet) lowerCavShape(pSet) children(idx);
-             lowerInnerBErr(pSet) {
-                 lowerCavShape(pSet) children(idx);
-                 lockSpace(pSet);
-             }
-         }
+            //Show object
+            color(objC) lowerIdimTrim(pSet) children();
+            color(objC) upperIdimTrim(pSet) children();
+            
+            //Show cavities
+            for (idx=[0:$children-1]) {
+                color(cavC,0.45) 
+                lowerCav(pSet)         
+                children(idx);
+            }            
+   
+            //Show grip holes
+            color(ghC,0.45)         
+            ghShapes(pSet) 
+            for (idx=[0:$children-1]) {
+                lowerCav(pSet) 
+                children(idx);
+            }
  
-        //Show uppwer errors indicators
-        color(errC)
-        open(pSet) 
-        for (idx=[0:1:$children-1]) {
-             upperOuterBErr(pSet) upperCavShape(pSet) children(idx);
-             lowerInnerBErr(pSet) {
-                 upperCavShape(pSet) children(idx);
-                 lockSpace(pSet);
-             }
-         }
+            //Show lock restrictions
+            color(dimC,0.45) 
+            lowerIdimTrim(pSet)
+            lockSpace(pSet);
  
-        //Visualize inner dimensions
-        color(dimC,0.45) shift(pSet) lowerIdimBb(pSet);
-        color(dimC,0.25) open(pSet)  upperIdimBb(pSet);
+            //Show inner dimensions
+            color(dimC,0.35) lowerIdimBb(pSet);
 
-        //Preview label
-        color(labC,0.75) open(pSet) flatLabel(pSet);
-    }
+            //Show dimension violations
+            color(errC) 
+            lowerOuterErr(pSet) 
+            for (idx=[0:$children-1]) {
+                lowerCav(pSet) 
+                children(idx);
+            }
+            
+            //Show cavity/lock conflicts 
+            color(errC) 
+            lowerInnerErr(pSet) 
+            safeIntersection() {
+                for (idx=[0:$children-1]) {
+                    lowerCav(pSet) 
+                    children(idx);
+                }
+                lockSpace(pSet);
+            }
+            
+            //Show grip hole/lock conflicts 
+           color(errC) 
+            lowerInnerErr(pSet) 
+            safeIntersection() {
+                ghShapes(pSet) 
+                for (idx=[0:$children-1]) {
+                    lowerCav(pSet) 
+                    children(idx);
+                }
+                lockSpace(pSet);
+            }
+        }
 
+        //Upper part
+        upperPos(pSet) {
+            
+            //Show cavities
+            for (idx=[0:$children-1]) {
+                color(cavC,0.45) 
+                upperCav(pSet)         
+                children(idx);
+            }            
+    
+            //Show lock restrictions
+            color(dimC,0.45) 
+            upperIdimTrim(pSet)
+            lockSpace(pSet);
+ 
+            //Show inner dimensions
+            color(dimC,0.25) upperIdimBb(pSet);
+
+            //Show dimension violations
+            color(errC) 
+            upperOuterErr(pSet)
+            for (idx=[0:$children-1]) {
+                color(cavC,0.45) 
+                upperCav(pSet)         
+                children(idx);
+            }            
+           
+            //Show cavity/lock conflicts 
+            color(errC) 
+            upperInnerErr(pSet) 
+            safeIntersection() {
+                for (idx=[0:$children-1]) {
+                    upperCav(pSet) 
+                    children(idx);
+                }
+                lockSpace(pSet);
+            }
+         }
+     }
+   
     //Generate stage
     //==============
-   if ((stage==3)||(!$preview)) {
+    if ((stage==3)||(!$preview)) {
 
-        //Draw lower inlay
-        color(filC)
-        shift(pSet) 
-        difference() {
-            lowerInlBb(pSet);
-            union() {
-                //Cavity
-                for (idx=[0:1:$children-1]) lowerCavShape(pSet) children(idx);
-                //Grip holes
-                ghShapes(pSet) 
-                for (idx=[0:1:$children-1]) lowerCavShape(pSet) children(idx);
-                //Lock
-                lowerLockNeg(pSet);
-            }   
-        } 
-
-        //Draw upper inlay
-        color(filC)
-        open(pSet)
-        difference() {
-            upperInlBb(pSet);
-            union() {
-                //Cavity
-                for (idx=[0:1:$children-1]) upperCavShape(pSet) children(idx);
-                //Lock
-                lowerLockNeg(pSet);
-            }
-        } 
+       //Lower part
+        lowerPos(pSet) {
+            
+            //Show object
+            if ($preview) color(objC) children();
  
-        //Draw lower shell
-        color(filC)
-        shift(pSet) lowerShell(pSet);
+            //Draw inlay
+            color(filC)
+            difference() {
+                lowerInlBb(pSet);
+                union() {  
+                    for (idx=[0:$children-1]) {
+                        lowerCav(pSet) 
+                        children(idx);
+                    }
+                    ghShapes(pSet) 
+                    for (idx=[0:$children-1]) {
+                        lowerCav(pSet) 
+                        children(idx);
+                    }
+                }   
+            }         
 
-        //Draw upper shell
-        color(filC)
-        open(pSet) upperShell(pSet);
+            //Draw shell
+            color(filC)
+            lowerShell(pSet);
+        }
 
-        //Hover object uver open case
-        if ($preview) {
-            color(objC)
-            translate([0,0,0]) shift(pSet) children();
+       //Upper part
+        upperPos(pSet) {
+            
+             //Draw inlay
+            color(filC)
+            difference() {
+                upperInlBb(pSet);
+                 for (idx=[0:$children-1]) {
+                    upperCav(pSet) 
+                    children(idx);
+                }
+            }            
+
+            //Draw shell
+            color(filC)
+            upperShell(pSet);
         }
     }
 }
-
-if ($preview) {
-
-    //Shell
-//    shell();
-   
-}
-
-
 

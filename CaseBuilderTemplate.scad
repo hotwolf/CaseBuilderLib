@@ -56,19 +56,34 @@
 
 include <CaseBuilderLib.scad>
 
-/* [Stage] */
+/* [View] */
 //Design stage
 Stage=1; // [1:Model, 2:Check, 3:Generate]
 
-/* [Dimensions] */
+//Opening angle
+OpenA=180; // [0:180]
+
+//Show upper part
+UvisB = true;
+
+//Show lower part
+LvisB = true;
+
+/* [Design Options] */
 //Inner X dimension
 IdimX=70; // [1:200]
 //Inner Y dimension
-IdimY=50;  // [1:200]
+IdimY=30;  // [1:200]
 //Inner Y dimension
 IdimZ=30;  // [1:200]
 
-/* [Grip Holes] */
+//Object offset in X direction
+ObjX=0; // [-50:50]
+//Object offset in Y direction
+ObjY=0;  // [-50:50]
+//Object offset in Z direction
+ObjZ=0;  // [-50:50]
+
 //First grip hole's X offset
 Gh1X=0;    // [-100:100]
 //Second grip hole's X offset
@@ -76,27 +91,37 @@ Gh2X=-100; // [-100:100]
 //Third grip hole's X offset
 Gh3X=-100; // [-100:100]
 
-/* [Label] */
+//Hinge Option
+HingeO=1; // [1:Single Print, 2:Separable]
+
+//Lock Option
+LockO=1; // [1:Elastic String, 2:Pull Latch, 3: Push Latch]
+
 //Label text
 LabT="Optional label";
 //Label size
 LabS=8; // [0:40]
 
-/* [Lock] */
-//Lock Option
-LockO=1; // [0:None, 1:Elastic String, 2:Pull Latch, 3: Push Latch]
-
 CaseBuilder(pSet(stage=Stage,            //Design stage  
+                 openA=OpenA,            //Opening angle
+                 uvisB=UvisB,            //Show upper part
+                 lvisB=LvisB,            //Show lower part
                  idimX=IdimX,            //Inner X dimension
                  idimY=IdimY,            //Inner X dimension
                  idimZ=IdimZ,            //Inner X dimension
+                  objX=ObjX,             //Object offset in X direction 
+                  objY=ObjY,             //Object offset in Y direction 
+                  objZ=ObjZ,             //Object offset in Z direction 
+                hingeO=HingeO,           //Hinge option        
+                 lockO=LockO,            //Lock option   
                    ghX=[Gh1X,Gh2X,Gh3X], //Grip hole offsets
                   labT=LabT,             //Label text
-                  labS=LabS,             //Label size
-                 lockO=LockO)) {         //Label size
-
+                  labS=LabS)) {          //Label size
+ 
         //!!! Your model goes here !!!
-        translate([0,0,-12.5]) cylinder(25,d1=30,d2=0);
-
+        //translate([0,0,12.5]) cylinder(25,d1=30,d2=0);
+        translate([-20,-15,-15]) cube([10,10,10],center=true);
+        translate([0,0,0])     cube([10,10,10],center=true);
+        translate([20,15,15])   cube([10,10,10],center=true);
 
 }

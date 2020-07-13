@@ -77,8 +77,8 @@ module ghProfile(pSet) {
     ghW    = pSet[idxGhW];    //Grip hole width
 
     hull() {
-        translate([0,-idimY/2+ghW/2,-idimZ/2]) cylinder4n(h=idimZ/2,d=ghW);
-        translate([0,idimY/2-ghW/2,-idimZ/2])  cylinder4n(h=idimZ/2,d=ghW);
+        translate([0,-idimY/2+ghW/2,-idimZ/2]) cylinder4n(h=1+idimZ/2,d=ghW);
+        translate([0,idimY/2-ghW/2,-idimZ/2])  cylinder4n(h=1+idimZ/2,d=ghW);
     }
 }
 

@@ -30,6 +30,14 @@
 
 include <CaseBuilderLib_Common.scad>
 
+//Global functions
+//================
+//Hinge offset
+function hoffX(pSet) = pSet[idxGapW];
+
+//Check for indivisible hinge
+function is_indivHinge(pSet) = true;
+
 //Positive lower hinge start segment
 module lowerHStartPos(pSet,$fn=24) {
     //Short cuts
