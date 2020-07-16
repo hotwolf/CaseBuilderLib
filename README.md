@@ -36,7 +36,7 @@ Design 3D printed cases for random things!
 
       ![Step 2.2](Examples/Gauge/howto_step2_2.jpg) 
 
-  3. If needed, add some grip holes by setting the variables
+   3. If needed, add some grip holes by setting the variables
       **`Gh1X`**, **`Gh2X`**, or **`Gh3X`** to a value within the inner 
       X dimension.
       Further grip holes can be added by manually extending the
@@ -88,7 +88,7 @@ Design 3D printed cases for random things!
 
       ![Step 4.1](Examples/Gauge/howto_step4_1.jpg) 
 
-  2. Render the design and generate a [STL file](https://github.com/hotwolf/CaseBuilderLib/blob/master/Examples/Gauge/Gauge.stl).
+   2. Render the design and generate a [STL file](https://github.com/hotwolf/CaseBuilderLib/blob/master/Examples/Gauge/Gauge.stl).
 
       ![Step 4.2](Examples/Gauge/howto_step4_2.jpg) 
 
