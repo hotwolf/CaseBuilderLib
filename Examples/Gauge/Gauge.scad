@@ -65,11 +65,8 @@ Gh2X=-100; // [-100:100]
 //Third grip hole's X offset
 Gh3X=-100; // [-100:100]
 
-//Hinge Option
-HingeO=1; // [1:Single Print, 2:Separable]
-
 //Lock Option
-LockO=1; // [1:Elastic String, 2:Pull Latch, 3: Push Latch]
+LockO=2; // [1:Elastic String, 2:Pull Latch]
 
 //Label text
 LabT="Messuhr";
@@ -86,16 +83,14 @@ CaseBuilder(pSet(stage=Stage,            //Design stage
                   objX=ObjX,             //Object offset in X direction 
                   objY=ObjY,             //Object offset in Y direction 
                   objZ=ObjZ,             //Object offset in Z direction 
-                hingeO=HingeO,           //Hinge option        
-                 lockO=LockO,            //Lock option   
-                   ghX=[Gh1X,Gh2X,Gh3X], //Grip hole offsets
+                  lockO=LockO,           //Lock option   
+                  ghX=[Gh1X,Gh2X,Gh3X],  //Grip hole offsets
                   labT=LabT,             //Label text
                   labS=LabS)) {          //Label size
 
-        //!!! Your model goes here !!!
+        //Gauge
         transrot([11.95,0,-13.3],[0,0,0])  cylinder4n(h=26.3,d=53.5);
         transrot([11.95,0,4.1],[0,0,0])    cylinder4n(h=8.9,d=58.2);
-
         transrot([54,0,-3.5],[0,270,0])    cylinder4n(h=20,d=9);
         transrot([-34.8,0,-3.5],[0,90,0])  cylinder4n(h=20,d=8);
         transrot([-48.8,0,-3.5],[0,90,0])  cylinder4n(h=14,d=4.5);
