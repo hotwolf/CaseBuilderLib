@@ -88,11 +88,11 @@ Design 3D printed cases for random things!
 
       ![Step 4.1](Examples/Gauge/howto_step4_1.jpg) 
 
-  2. Render the design and generate a [STL file]
-     (https://github.com/hotwolf/CaseBuilderLib/blob/master/Examples/Gauge/Gauge.stl).
+  2. Render the design and generate a [STL file](https://github.com/hotwolf/CaseBuilderLib/blob/master/Examples/Gauge/Gauge.stl).
 
-     ![Step 4.2](Examples/Gauge/howto_step4_2.jpg) 
+      ![Step 4.2](Examples/Gauge/howto_step4_2.jpg) 
 
    3. Slice and print.
 
-     ![Step 4.3](Examples/Gauge/howto_step4_3.jpg) 
+      ![Step 4.3](Examples/Gauge/howto_step4_3.jpg)
+
