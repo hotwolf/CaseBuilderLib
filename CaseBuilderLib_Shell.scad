@@ -58,7 +58,7 @@ module shellShape(pSet) {
             translate([-idimX/2,-idimY/2,-idimZ/2]) cylinder4n(h=idimZ/2,r=wallW);
             translate([-idimX/2,-idimY/2,-idimZ/2]) hemisphere4n(r=wallW,shs=true);
         }
-        cube([idimX,idimY,1+idimZ],center=true);
+        cube([idimX,idimY,idimZ],center=true);
     }
 }
 
@@ -85,6 +85,6 @@ module upperShell(pSet) {
 if ($preview) {
 
     lowerShell(pSet());
-    upperShell(pSet());
+//    upperShell(pSet());
     
 }
