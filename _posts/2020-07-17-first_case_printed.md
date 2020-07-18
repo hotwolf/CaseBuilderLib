@@ -24,7 +24,7 @@ side, there is only a thin membrane over some hollow space.
 As it turns out, this strange slizing result was caused by a bug in
 the library. It created a 0.5mm gap between the inlay and the shell.
 
-![Design bug]({{ site.url }}/images/2020-07-17-desughn_fault.jpg)
+![Design bug]({{ site.url }}/images/2020-07-17-design_fault.jpg)
 
 I'm amazed that my printer actually managed to print this.
 The bug is now fixed and I think the CaseBuilderLib is ready for its
