@@ -15,4 +15,4 @@ With this design I got an even number of hinge elements.
 ![Hinge]({{ site.url }}/images/2020-07-21-hinge.jpg)
 
 Hinge and latch turned oout fine. The library bug that I've observed in the
-[previous case]({ site.url }}/2020/07/17/first_case_printed.html) is fixed.
+[previous case]({{ site.url }}/2020/07/17/first_case_printed.html) is fixed.
