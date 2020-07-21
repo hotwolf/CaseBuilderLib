@@ -48,9 +48,6 @@ module lowerLockPos(pSet) {
     wallW  = pSet[idxWallW];  //Wall thickness
     gapW   = pSet[idxGapW];   //Gap between moving parts
     lockO  = pSet[idxLockO];  //Lock option
-
-
-
 }
 
 //Negative lower lock parts 

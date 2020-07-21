@@ -1,5 +1,5 @@
 //###############################################################################
-//# CaseBuilderLib - Basic shell                                                #
+//# CaseBuilderLib - Shell                                                      #
 //###############################################################################
 //#    Copyright 2020 Dirk Heisswolf                                            #
 //#    This file is part of the CaseBuilderLib project.                         #
