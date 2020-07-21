@@ -1,5 +1,4 @@
-// CaseBuilderLibLite
-//###################
+# CaseBuilderLibLite
 This is a simplified version of the CaseBuilderLib, which aims to be
 compatible to the Thingiverse configurator.
 The BaseBuilderLibLite only supports the generation of empty cases
