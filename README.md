@@ -9,7 +9,7 @@ Design 3D printed cases for random things!
    1. Make a copy of the CaseBuilderLib project template 
       (**CaseBuilderTemplate.scad**).
       The temmplate is intended to be used with the OpenSCAD
-      configurator. 
+      Customizer. 
 
       ![Step 1.1a](Examples/Gauge/howto_step1_1a.jpg) 
 
@@ -66,7 +66,8 @@ Design 3D printed cases for random things!
 
 3. **Check Stage**
    1. Review the design. 
-      Make sure to resolve all problems highlighted in red.
+      Make sure to resolve all problems highlighted in
+      <span style="background-color: #FF0000">red</span>.
       The case can be opened or closed by adjusing the angle in
       the **openA** variable.  
       The upper part of the case can be eclipsed through the 
