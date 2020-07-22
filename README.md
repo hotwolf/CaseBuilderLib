@@ -67,7 +67,7 @@ Design 3D printed cases for random things!
 3. **Check Stage**
    1. Review the design. 
       Make sure to resolve all problems highlighted in
-      <span style="background-color: #FF0000">red</span>.
+      <span style="color:red">red</span>.
       The case can be opened or closed by adjusing the angle in
       the **openA** variable.  
       The upper part of the case can be eclipsed through the 
