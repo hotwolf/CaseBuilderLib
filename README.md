@@ -8,7 +8,7 @@ Design 3D printed cases for random things!
 1. **Preparation**
    1. Make a copy of the CaseBuilderLib project template 
       (**CaseBuilderTemplate.scad**).
-      The temmplate is intended to be used with the OpenSCAD
+      The template is intended to be used with the OpenSCAD
       Customizer. 
 
       ![Step 1.1a](Examples/Gauge/howto_step1_1a.jpg) 
