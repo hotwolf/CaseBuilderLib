@@ -94,13 +94,14 @@ module CaseBuilder(pSet) {
         lowerPos(pSet) {
             
             //Show object
-            color(objC) lowerIdimTrim(pSet) children();
-            color(objC) upperIdimTrim(pSet) children();
+            color(objC) objOff(pSet) lowerIdimTrim(pSet) children();
+            color(objC) objOff(pSet) upperIdimTrim(pSet) children();
             
             //Show cavities
             for (idx=[0:$children-1]) {
                 color(cavC,0.45) 
-                lowerCav(pSet)         
+                lowerCav(pSet)
+                objOff(pSet)         
                 children(idx);
             }            
    
@@ -109,6 +110,7 @@ module CaseBuilder(pSet) {
             ghShapes(pSet) 
             for (idx=[0:$children-1]) {
                 lowerCav(pSet) 
+                objOff(pSet)         
                 children(idx);
             }
  
@@ -125,6 +127,7 @@ module CaseBuilder(pSet) {
             lowerOuterErr(pSet) 
             for (idx=[0:$children-1]) {
                 lowerCav(pSet) 
+                objOff(pSet)         
                 children(idx);
             }
             
@@ -134,6 +137,7 @@ module CaseBuilder(pSet) {
             safeIntersection() {
                 for (idx=[0:$children-1]) {
                     lowerCav(pSet) 
+                    objOff(pSet)         
                     children(idx);
                 }
                 lockSpace(pSet);
@@ -146,6 +150,7 @@ module CaseBuilder(pSet) {
                 ghShapes(pSet) 
                 for (idx=[0:$children-1]) {
                     lowerCav(pSet) 
+                    objOff(pSet)         
                     children(idx);
                 }
                 lockSpace(pSet);
@@ -159,6 +164,7 @@ module CaseBuilder(pSet) {
             for (idx=[0:$children-1]) {
                 color(cavC,0.45) 
                 upperCav(pSet)         
+                objOff(pSet)         
                 children(idx);
             }            
     
@@ -176,6 +182,7 @@ module CaseBuilder(pSet) {
             for (idx=[0:$children-1]) {
                 color(cavC,0.45) 
                 upperCav(pSet)         
+                objOff(pSet)         
                 children(idx);
             }            
            
@@ -185,6 +192,7 @@ module CaseBuilder(pSet) {
             safeIntersection() {
                 for (idx=[0:$children-1]) {
                     upperCav(pSet) 
+                    objOff(pSet)         
                     children(idx);
                 }
                 lockSpace(pSet);
@@ -200,7 +208,7 @@ module CaseBuilder(pSet) {
         lowerPos(pSet) {
             
             //Show object
-            if ($preview) color(objC) children();
+            if ($preview) color(objC) objOff(pSet) children();
  
             //Draw inlay
             color(filC)
@@ -209,11 +217,13 @@ module CaseBuilder(pSet) {
                 union() {  
                     for (idx=[0:$children-1]) {
                         lowerCav(pSet) 
+                        objOff(pSet)         
                         children(idx);
                     }
                     ghShapes(pSet) 
                     for (idx=[0:$children-1]) {
                         lowerCav(pSet) 
+                        objOff(pSet)         
                         children(idx);
                     }
                 }   
@@ -233,6 +243,7 @@ module CaseBuilder(pSet) {
                 upperInlBb(pSet);
                  for (idx=[0:$children-1]) {
                     upperCav(pSet) 
+                    objOff(pSet)         
                     children(idx);
                 }
             }            
