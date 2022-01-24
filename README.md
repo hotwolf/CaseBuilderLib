@@ -20,7 +20,7 @@ Design 3D printed cases for random things!
       ![Step 1.1b](Examples/Gauge/howto_step1_1b.jpg)
 
 2. **Model Stage**
-   1. Design a model the parts of your case content as children
+   1. Design a model of the parts of your case content as children
       of the **`CaseBuilder()`** module. 
       Construct each part of the content using primitive shapes. 
       Complex shapes will be wrapped in a hull.
