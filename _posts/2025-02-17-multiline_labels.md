@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  Multiline-Labels
+title:  Multi-Line Labels
 ---
 
-Thanks to [ColinNg](https://github.com/ColinNg), the [CaseBuilderLib](https://github.com/hotwolf/CaseBuilderLib/tree/master) now supports multiline lables.
+Thanks to [ColinNg](https://github.com/ColinNg), the [CaseBuilderLib](https://github.com/hotwolf/CaseBuilderLib/tree/master) now supports multi-line lables.
 To use this feature, simply replace the "labT" string by an array of strings:
 
 
