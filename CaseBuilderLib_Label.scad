@@ -76,6 +76,7 @@ module flatLabel(pSet) {
     numLines = len(labT);
     totalHeight = getLineOffset(labS, numLines-1);
     
+    rotate([0,0,pSet[idxIdimX]<pSet[idxIdimY] ? 270 : 0])
     for(i = [0:numLines-1]) {
         offset = totalHeight/2 - getLineOffset(labS, i);
         translate([0, offset, baseZ]) 
@@ -96,6 +97,7 @@ module engraveLabel(pSet) {
     difference() {
         children();
         
+        rotate([0,0,pSet[idxIdimX]<pSet[idxIdimY] ? 270 : 0])
         for(i = [0:numLines-1]) {
             offset = totalHeight/2 - getLineOffset(labS, i);
             translate([0, offset, baseZ]) 
