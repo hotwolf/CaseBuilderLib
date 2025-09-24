@@ -120,8 +120,8 @@ union() {
   lowerPos(pSet) {
     difference() {
       hull() {
-        translate([72,-39,-10]) cylinder4n(h=10,r1=11+1,r2=11-2);
-        translate([-72,-39,-10]) cylinder4n(h=10,r1=11+1,r2=11-2);
+        translate([72,-40,-10]) cylinder4n(h=10,r1=10+1,r2=10-2);
+        translate([-72,-40,-10]) cylinder4n(h=10,r1=10+1,r2=10-2);
       }
     }
   }
@@ -129,8 +129,8 @@ union() {
   upperPos(pSet) {
     difference() {
       hull() {
-        translate([72,-39,0]) cylinder4n(h=10,r1=11-1,r2=11+2);
-        translate([-72,-39,0]) cylinder4n(h=10,r1=11-1,r2=11+2);
+        translate([72,-40,0]) cylinder4n(h=10,r1=10-1,r2=10+2);
+        translate([-72,-40,0]) cylinder4n(h=10,r1=10-1,r2=10+2);
       }
     }
   }
