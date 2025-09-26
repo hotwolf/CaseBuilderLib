@@ -75,6 +75,8 @@ LabT="NanoVNA";
 //Label size
 LabS=24; // [0:40]
 
+$fn = 128;
+
 pSet=pSet( stage=Stage,            //Design stage  
            openA=OpenA,            //Opening angle
            uvisB=UvisB,            //Show upper part
@@ -102,38 +104,64 @@ CaseBuilder(pSet) {
         cube([132.4,74.6,18.4]);        
 
     //Adapters
-    transrot([10,10,0],[0,0,0]) cylinder(h=11.2, d=11, center=true, $fn=6);  
-    transrot([26,10,0],[0,0,0]) cylinder(h=11.2, d=11, center=true, $fn=6);  
-    transrot([10,26,0],[0,0,0]) cylinder(h=11.2, d=11, center=true, $fn=6);    
-    transrot([26,26,0],[0,0,0]) cylinder(h=11.2, d=11, center=true, $fn=6);        
+    transrot([8,43,0],[0,0,0]) cylinder(h=3.6, d=9.2, $fn=6);  
+    transrot([8,30,0],[0,0,0]) cylinder(h=3.6, d=9.2, $fn=6);  
+    transrot([8,17,0],[0,0,0]) cylinder(h=3.6, d=9.2, $fn=6);    
+    transrot([8, 4,0],[0,0,0]) cylinder(h=3.6, d=9.2, $fn=6);        
 
-    transrot([12,70,0],[90,0,0]) cylinder(h=18.4, d=15.3);        
-    transrot([12,70,0],[90,0,0]) cylinder(h=30, d=8);        
-    transrot([12,70,0],[90,0,0]) cylinder(h=3.2, d1= 15.3, d2=10.6);        
+    transrot([33,67,0],[0,270,0]) cylinder(h=18.4, d=15.3);        
+    transrot([33,67,0],[0,270,0]) cylinder(h=30, d=8);        
+    transrot([14.6,67,0],[0,270,0]) cylinder(h=3.2, d1= 15.3, d2=10.6);        
 
-    transrot([26,44,0],[0,0,0]) cylinder(h=14, d=6.3, center=true);        
+    transrot([8,55,0],[0,0,0]) cylinder(h=7, d=6.3);        
 }
 
 //Extra cutouts
 union() {
 
   lowerPos(pSet) {
-    difference() {
-      hull() {
-        translate([72,-40,-10]) cylinder4n(h=10,r1=10+1,r2=10-2);
-        translate([-72,-40,-10]) cylinder4n(h=10,r1=10+1,r2=10-2);
-      }
-    }
+    
+    //Adapters
+    transrot([8+ObjX,43+ObjY,-8],[0,0,0]) cylinder(h=5.6, d=9.6, $fn=6);  
+    transrot([8+ObjX,30+ObjY,-8],[0,0,0]) cylinder(h=5.6, d=9.6, $fn=6);  
+    transrot([8+ObjX,17+ObjY,-8],[0,0,0]) cylinder(h=5.6, d=9.6, $fn=6);    
+    transrot([8+ObjX, 4+ObjY,-8],[0,0,0]) cylinder(h=5.6, d=9.6, $fn=6);        
+
+    transrot([8+ObjX,55+ObjY,-10],[0,0,0]) cylinder(h=10, d=6.7);        
+    
+    //Cable holders  
+    hull() {
+        translate([-81,-33,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+        translate([-81,-46,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+        translate([ 81,-33,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+        translate([ 81,-46,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+      }   
+    hull() {
+        translate([ 68, 28,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+        translate([ 81, 28,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+        translate([ 68,-46,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+        translate([ 81,-46,-10.5]) cylinder4n(h=11,r1=4,r2=2);
+      }   
+      
   }
       
   upperPos(pSet) {
-    difference() {
-      hull() {
-        translate([72,-40,0]) cylinder4n(h=10,r1=10-1,r2=10+2);
-        translate([-72,-40,0]) cylinder4n(h=10,r1=10-1,r2=10+2);
-      }
-    }
+      
+      //Cable holders  
+    hull() {
+        translate([-81,-33,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+        translate([-81,-46,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+        translate([ 81,-33,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+        translate([ 81,-46,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+      }   
+    hull() {
+        translate([ 68, 28,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+        translate([ 81, 28,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+        translate([ 68,-46,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+        translate([ 81,-46,-0.5]) cylinder4n(h=11,r1=2,r2=4);
+      }   
+     }
   }
 
 }
-}
+
